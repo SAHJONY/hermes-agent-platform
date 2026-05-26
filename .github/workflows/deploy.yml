@@ -52,7 +52,7 @@ jobs:
       - name: Deploy to Vercel
         run: |
           echo "Starting Vercel deployment..."
-          npx vercel deploy --prod --token="$VERCEL_TOKEN" --yes
+          npx vercel deploy --prod --token="${{ secrets.VERCEL_TOKEN }}" --yes
 
   test:
     runs-on: ubuntu-latest
