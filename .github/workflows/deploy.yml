@@ -5,6 +5,11 @@ on:
     branches:
       - master
 
+env:
+  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -26,17 +31,13 @@ jobs:
       - name: Generate Prisma Client
         run: npx prisma generate
 
+      - name: Create Vercel project config
+        run: |
+          mkdir -p .vercel
+          echo '{"projectId":"'$VERCEL_PROJECT_ID'","orgId":"'$VERCEL_ORG_ID'","projectName":"hermes-agent-platform"}' > .vercel/project.json
+
       - name: Deploy to Vercel
-        uses: vercel/actions/deploy@v1
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: '--prod'
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: npx vercel deploy --prod --token="$VERCEL_TOKEN" --yes
 
   test:
     runs-on: ubuntu-latest
