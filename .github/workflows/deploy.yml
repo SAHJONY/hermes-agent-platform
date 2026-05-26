@@ -26,31 +26,17 @@ jobs:
       - name: Generate Prisma Client
         run: npx prisma generate
 
-      - name: Build project
-        run: npm run build
-
-      - name: Deploy via Vercel API
+      - name: Deploy to Vercel
+        uses: vercel/actions/deploy@v1
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod'
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-        run: |
-          echo "Creating deployment via Vercel REST API..."
-          
-          # Get latest build files
-          BUILD_DIR=.nextstandalone
-          
-          # Create deployment via API
-          RESPONSE=$(curl -s -w "%{http_code}" -o /tmp/deploy_response.json -X POST "https://api.vercel.com/v13/deployments")
-          echo "API Response code: $RESPONSE"
-          cat /tmp/deploy_response.json | head -c 500
-          
-          if [ "$RESPONSE" = "200" ] || [ "$RESPONSE" = "201" ]; then
-            echo "Deployment created successfully!"
-          else
-            echo "Deployment failed"
-            exit 1
-          fi
 
   test:
     runs-on: ubuntu-latest
