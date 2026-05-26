@@ -13,11 +13,6 @@ concurrency:
   group: ${{ github.REF }}
   cancel-in-progress: true
 
-env:
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -39,16 +34,13 @@ jobs:
       - name: Generate Prisma Client
         run: npx prisma generate
 
-      - name: Create Vercel Project Settings
-        run: |
-          mkdir -p .vercel
-          echo '{"projectId":"${{ secrets.VERCEL_PROJECT_ID }}","orgId":"${{ secrets.VERCEL_ORG_ID }}","projectName":"hermes-agent-platform"}' > .vercel/project.json
-
-      - name: Build Project Artifacts
-        run: npx vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Deploy Project Artifacts to Vercel
-        run: npx vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Deploy to Vercel
+        uses: actions/vercel-action@v0.8.0
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod'
 
   # Optional: Run tests after deployment
   test:
