@@ -34,6 +34,7 @@ The self-sustaining economic engine that turns code into revenue and data into i
 ### Voice AI Integration (Bland.ai)
 - **Automated Outbound Calls** - AI-powered voice agent for appointment reminders, notifications
 - **Call Status Webhooks** - Real-time call status updates and recording handling
+  - Note: Webhook handler at `/api/bland/webhook` handles call status callbacks
 
 ### API Endpoints
 - `POST /api/chat` - Chat with AI agents
@@ -82,27 +83,28 @@ Create a `.env` file in the root directory:
 
 ```env
 # Database - Supabase with pooler for serverless
-DATABASE_URL="postgresql://postgres:[PASSWORD]@db.[PROJECT].supabase.co:6543/postgres?pgbouncer=true&connection_limit=1"
+# Replace <YOUR_PASSWORD> and <YOUR_PROJECT> with actual values
+DATABASE_URL="postgresql://postgres:<YOUR_PASSWORD>@db.<YOUR_PROJECT>.supabase.co:6543/postgres?pgbouncer=true&connection_limit=1"
 
 # NextAuth Configuration
 NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="your-secret-here-generate-with-openssl-rand-base64-32"
+NEXTAUTH_SECRET="<GENERATE_WITH: openssl rand -base64 32>"
 
 # NVIDIA AI (Qwen3.5-32B)
-NVIDIA_API_KEY="your-nvidia-api-key"
+NVIDIA_API_KEY="<YOUR_NVIDIA_API_KEY>"
 NVIDIA_BASE_URL="https://integrate.api.nvidia.com/v1"
 NVIDIA_MODEL_NAME="qwen/qwen3.5-32b-a17b"
 
 # SMTP Configuration (for email)
-SMTP_USER="your-smtp-user"
-SMTP_PASS="your-smtp-password"
+SMTP_USER="<YOUR_SMTP_USER>"
+SMTP_PASS="<YOUR_SMTP_PASSWORD>"
 
 # Resend (Email API)
-RESEND_API_KEY="your-resend-api-key"
+RESEND_API_KEY="<YOUR_RESEND_API_KEY>"
 
 # Bland.ai (Voice AI)
-BLAND_AI_API_KEY="your-bland-api-key"
-BLAND_AI_WEBHOOK_SECRET="your-webhook-secret"
+BLAND_AI_API_KEY="<YOUR_BLAND_API_KEY>"
+BLAND_AI_WEBHOOK_SECRET="<YOUR_WEBHOOK_SECRET>"
 BLAND_DEFAULT_FROM_NUMBER="+1XXXXXXXXXX"
 BLAND_DEFAULT_CALLER_ID="+1XXXXXXXXXX"
 BLAND_WEBHOOK_URL="https://your-domain.com/api/bland/webhook"
@@ -110,14 +112,19 @@ BLAND_WEBHOOK_URL="https://your-domain.com/api/bland/webhook"
 
 ### Database Setup
 ```bash
+# Install dependencies (postinstall script runs prisma generate automatically)
+npm install
+
 # Push schema to database
 npx prisma db push
 
-# Generate Prisma client
-npx prisma generate
-
-# (Optional) Open Prisma Studio
+# (Optional) Open Prisma Studio to inspect data
 npx prisma studio
+```
+
+**For Production Migrations:**
+```bash
+npx prisma migrate deploy
 ```
 
 ### Run Development Server
@@ -131,19 +138,9 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 
 ### Vercel (Recommended)
 
-1. **Install Vercel CLI**
+1. **Deploy with Vercel CLI**
    ```bash
-   npm install -g vercel
-   ```
-
-2. **Login to Vercel**
-   ```bash
-   vercel login
-   ```
-
-3. **Deploy**
-   ```bash
-   vercel --prod
+   npx vercel --prod
    ```
 
 4. **Add Environment Variables** in Vercel Dashboard:
@@ -221,14 +218,17 @@ The platform supports multiple authentication providers:
 ### Setting up OAuth Providers
 
 **GitHub:**
-1. Go to GitHub Settings → Developer settings → OAuth Apps
-2. Create new OAuth App
+1. Go to [GitHub Developer Settings](https://github.com/settings/developers) → OAuth Apps
+2. Create new OAuth App with:
+   - Homepage URL: `http://localhost:3000`
+   - Authorization callback URL: `http://localhost:3000/api/auth/callback/github`
 3. Add `GITHUB_ID` and `GITHUB_SECRET` to environment variables
 
 **Google:**
-1. Go to Google Cloud Console → APIs & Services → Credentials
-2. Create OAuth 2.0 Client ID
-3. Add `GOOGLE_ID` and `GOOGLE_SECRET` to environment variables
+1. Go to [Google Cloud Console](https://console.cloud.google.com/) → APIs & Services → Credentials
+2. Create OAuth 2.0 Client ID for Web Application
+3. Add authorized redirect URI: `http://localhost:3000/api/auth/callback/google`
+4. Add `GOOGLE_ID` and `GOOGLE_SECRET` to environment variables
 
 ## 🔌 API Documentation
 
@@ -299,4 +299,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📧 Support
 
-For support, email support@hermes-platform.com or join our [Discord](https://discord.gg/hermes).
+For questions or issues, please open an issue on [GitHub](https://github.com/SAHJONY/hermes-agent-platform/issues).
