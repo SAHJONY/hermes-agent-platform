@@ -45,7 +45,7 @@ jobs:
           echo '{"projectId":"'"$VERCEL_PROJECT_ID"'","orgId":"'"$VERCEL_ORG_ID"'","projectName":"hermes-agent-platform"}' > .vercel/project.json
 
       - name: Deploy to Vercel
-        run: npx vercel deploy --prod --token=$VERCEL_TOKEN --yes
+        run: npx vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }} --yes
 
   # Optional: Run tests after deployment
   test:
