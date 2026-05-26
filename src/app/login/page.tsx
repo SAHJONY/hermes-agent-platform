@@ -44,23 +44,24 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex bg-black">
+      {/* Left side - Minimal form */}
       <div className="flex-1 flex items-center justify-center p-8">
-        <div className="w-full max-w-md">
-          <div className="text-center mb-8">
-            <Link href="/" className="inline-flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center font-bold text-xl">
+        <div className="w-full max-w-sm">
+          <div className="mb-10">
+            <Link href="/" className="inline-flex items-center gap-2 mb-8">
+              <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center font-bold text-black text-sm">
                 H
               </div>
-              <span className="font-bold text-xl">Hermes</span>
+              <span className="font-semibold">Hermes</span>
             </Link>
-            <h1 className="text-3xl font-bold mb-2">Welcome back</h1>
-            <p className="text-gray-400">Sign in to continue to your dashboard</p>
+            <h1 className="text-3xl font-semibold mb-2">Sign in</h1>
+            <p className="text-gray-400">Continue to your dashboard</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
-              <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm">
+              <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
                 {error}
               </div>
             )}
@@ -74,7 +75,7 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full pl-12 pr-4 py-3 bg-white/5 rounded-xl border border-white/10 focus:border-purple-500/50 focus:outline-none"
+                  className="tesla-input pl-12"
                   placeholder="you@example.com"
                 />
               </div>
@@ -89,7 +90,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full pl-12 pr-4 py-3 bg-white/5 rounded-xl border border-white/10 focus:border-purple-500/50 focus:outline-none"
+                  className="tesla-input pl-12"
                   placeholder="••••••••"
                 />
               </div>
@@ -98,9 +99,9 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 bg-gradient-to-r from-purple-600 to-cyan-600 rounded-xl font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
+              className="w-full py-3.5 bg-white text-black rounded-lg font-medium text-sm hover:bg-gray-100 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
             >
-              {isLoading && <Loader2 size={18} className="animate-spin" />}
+              {isLoading && <Loader2 size={16} className="animate-spin" />}
               Sign In
             </button>
           </form>
@@ -109,18 +110,18 @@ export default function LoginPage() {
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-white/10"></div>
             </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-gray-900 text-gray-500">or continue with</span>
+            <div className="relative flex justify-center">
+              <span className="px-4 bg-black text-xs text-gray-500">or continue with</span>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             <button
               onClick={() => handleOAuth('github')}
               disabled={isOAuthLoading}
-              className="flex items-center justify-center gap-2 px-4 py-3 glass rounded-xl hover:bg-white/10 transition-colors disabled:opacity-50"
+              className="flex items-center justify-center gap-2 px-4 py-3 bg-neutral-900 border border-white/10 rounded-lg text-sm hover:bg-neutral-800 transition-colors disabled:opacity-50"
             >
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
               </svg>
               GitHub
@@ -128,9 +129,9 @@ export default function LoginPage() {
             <button
               onClick={() => handleOAuth('google')}
               disabled={isOAuthLoading}
-              className="flex items-center justify-center gap-2 px-4 py-3 glass rounded-xl hover:bg-white/10 transition-colors disabled:opacity-50"
+              className="flex items-center justify-center gap-2 px-4 py-3 bg-neutral-900 border border-white/10 rounded-lg text-sm hover:bg-neutral-800 transition-colors disabled:opacity-50"
             >
-              <svg className="w-5 h-5" viewBox="0 0 24 24">
+              <svg className="w-4 h-4" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
@@ -140,22 +141,23 @@ export default function LoginPage() {
             </button>
           </div>
 
-          <p className="text-center text-gray-400 mt-8">
+          <p className="text-center text-gray-400 mt-8 text-sm">
             Don't have an account?{' '}
-            <Link href="/register" className="text-purple-400 hover:text-purple-300">
+            <Link href="/register" className="text-white hover:underline">
               Sign up
             </Link>
           </p>
         </div>
       </div>
 
-      <div className="hidden lg:flex flex-1 bg-gradient-to-br from-purple-900/50 to-cyan-900/50 items-center justify-center">
-        <div className="max-w-lg text-center p-8">
-          <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center text-4xl font-bold mx-auto mb-6 animate-float">
+      {/* Right side - Minimal dark panel with subtle content */}
+      <div className="hidden lg:flex flex-1 bg-neutral-950 items-center justify-center p-12">
+        <div className="max-w-sm text-center">
+          <div className="w-20 h-20 bg-neutral-900 rounded-2xl flex items-center justify-center text-3xl font-bold mx-auto mb-8">
             H
           </div>
-          <h2 className="text-3xl font-bold mb-4">Welcome to Hermes</h2>
-          <p className="text-gray-400 text-lg">
+          <h2 className="text-2xl font-semibold mb-4">Welcome to Hermes</h2>
+          <p className="text-gray-400 leading-relaxed">
             Configure your own AI agents, collaborate with your team, and build powerful workflows.
           </p>
         </div>

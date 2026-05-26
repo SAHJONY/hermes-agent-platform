@@ -43,8 +43,8 @@ export default function DashboardLayout({
 
   if (status === 'loading') {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+      <div className="min-h-screen flex items-center justify-center bg-black">
+        <div className="w-6 h-6 border border-white/20 border-t-white rounded-full animate-spin"></div>
       </div>
     )
   }
@@ -54,15 +54,16 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen flex">
-      <aside className="w-64 glass-dark border-r border-white/5 flex flex-col">
+    <div className="min-h-screen bg-black flex">
+      {/* Tesla-style Sidebar - Minimal black, subtle border */}
+      <aside className="w-64 bg-neutral-950 border-r border-white/5 flex flex-col">
         <div className="p-6 border-b border-white/5">
           <Link href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center font-bold text-xl">
+            <div className="w-9 h-9 bg-white rounded-lg flex items-center justify-center font-bold text-black text-sm">
               H
             </div>
             <div>
-              <span className="font-bold">Hermes</span>
+              <span className="font-semibold text-sm">Hermes</span>
               <span className="text-xs text-gray-500 block">Agent Platform</span>
             </div>
           </Link>
@@ -75,13 +76,13 @@ export default function DashboardLayout({
               <Link
                 key={item.name}
                 href={item.href}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition-colors ${
                   isActive 
-                    ? 'bg-purple-500/20 text-purple-400' 
-                    : 'hover:bg-white/5 text-gray-400 hover:text-white'
+                    ? 'bg-white/10 text-white' 
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
                 }`}
               >
-                <item.icon size={20} />
+                <item.icon size={18} />
                 {item.name}
               </Link>
             )
@@ -91,24 +92,24 @@ export default function DashboardLayout({
         <div className="p-4">
           <Link
             href="/dashboard/chat/new"
-            className="flex items-center justify-center gap-2 w-full py-3 bg-gradient-to-r from-purple-600 to-cyan-600 rounded-xl font-semibold hover:opacity-90 transition-opacity"
+            className="flex items-center justify-center gap-2 w-full py-3 bg-white text-black rounded-lg font-medium text-sm hover:bg-gray-100 transition-colors"
           >
-            <Plus size={18} />
+            <Plus size={16} />
             New Chat
           </Link>
         </div>
 
         <div className="p-4 border-t border-white/5">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center font-semibold">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-9 h-9 bg-neutral-800 rounded-full flex items-center justify-center text-sm font-medium">
               {session.user?.name?.[0] || session.user?.email?.[0] || 'U'}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-medium truncate">{session.user?.name || 'User'}</p>
+              <p className="text-sm font-medium truncate">{session.user?.name || 'User'}</p>
               <p className="text-xs text-gray-500 truncate">{session.user?.email}</p>
             </div>
           </div>
-          <button className="flex items-center gap-2 w-full mt-3 px-3 py-2 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+          <button className="flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
             <LogOut size={16} />
             Sign Out
           </button>

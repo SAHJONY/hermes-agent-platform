@@ -19,93 +19,108 @@ export default function ChatPage() {
   )
 
   return (
-    <div className="flex h-full">
-      {/* Conversations List */}
-      <div className="w-80 border-r border-white/5 flex flex-col">
-        <div className="p-4">
+    <div className="flex h-screen">
+      {/* Left sidebar - Conversation list */}
+      <div className="w-80 bg-neutral-950 border-r border-white/5 flex flex-col">
+        <div className="p-4 border-b border-white/5">
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="text-lg font-semibold">Messages</h1>
+            <button className="w-8 h-8 bg-neutral-800 hover:bg-neutral-700 rounded-lg flex items-center justify-center transition-colors">
+              <Plus size={16} />
+            </button>
+          </div>
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={16} />
             <input
               type="text"
-              placeholder="Search conversations..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-white/5 rounded-xl border border-white/10 focus:border-purple-500/50 focus:outline-none text-sm"
+              placeholder="Search conversations"
+              className="w-full pl-10 pr-4 py-2.5 bg-neutral-900 border border-white/5 rounded-lg text-sm focus:outline-none focus:border-white/20"
             />
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-2">
+        <div className="flex-1 overflow-auto p-2">
           {filteredConversations.map((conv) => (
             <button
               key={conv.id}
               onClick={() => setSelectedConversation(conv.id)}
-              className={`w-full p-4 rounded-xl text-left transition-colors ${
+              className={`w-full p-3 rounded-lg text-left transition-colors mb-1 ${
                 selectedConversation === conv.id
-                  ? 'bg-purple-500/20 border border-purple-500/30'
-                  : 'hover:bg-white/5 border border-transparent'
+                  ? 'bg-white/10'
+                  : 'hover:bg-white/5'
               }`}
             >
-              <div className="flex items-start justify-between mb-2">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500/20 to-cyan-500/20 flex items-center justify-center">
-                  <MessageSquare size={20} className="text-purple-400" />
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <MessageSquare size={18} className="text-gray-400" />
                 </div>
-                <span className="text-xs text-gray-500">{conv.time}</span>
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-sm truncate">{conv.title}</p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="text-xs text-gray-500">{conv.messages} messages</span>
+                    <span className="text-xs text-gray-600">•</span>
+                    <span className="text-xs text-gray-500">{conv.time}</span>
+                  </div>
+                </div>
               </div>
-              <p className="font-medium mb-1">{conv.title}</p>
-              <p className="text-xs text-gray-500">{conv.messages} messages</p>
             </button>
           ))}
         </div>
-
-        <div className="p-4 border-t border-white/5">
-          <button className="flex items-center justify-center gap-2 w-full py-3 bg-gradient-to-r from-purple-600 to-cyan-600 rounded-xl font-semibold hover:opacity-90 transition-opacity">
-            <Plus size={18} />
-            New Conversation
-          </button>
-        </div>
       </div>
 
-      {/* Chat Area */}
-      <div className="flex-1 flex flex-col">
+      {/* Main chat area */}
+      <div className="flex-1 flex flex-col bg-black">
         {selectedConversation ? (
           <>
+            {/* Chat header */}
             <div className="p-4 border-b border-white/5 flex items-center justify-between">
               <div>
                 <h2 className="font-semibold">Code review for authentication</h2>
-                <p className="text-sm text-gray-500">24 messages · Started 2 hours ago</p>
+                <p className="text-sm text-gray-500">24 messages</p>
               </div>
-              <button className="p-2 hover:bg-white/5 rounded-lg">
-                <MoreVertical size={20} className="text-gray-400" />
+              <button className="w-8 h-8 bg-neutral-900 hover:bg-neutral-800 rounded-lg flex items-center justify-center transition-colors">
+                <MoreVertical size={16} />
               </button>
             </div>
 
-            <div className="flex-1 p-4 overflow-y-auto space-y-4">
-              <div className="flex gap-3">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center font-semibold text-sm">H</div>
-                <div className="flex-1">
-                  <div className="bg-white/5 rounded-2xl rounded-tl-none p-4 max-w-2xl">
-                    <p className="text-sm">I've reviewed your authentication code. Here's what I found:</p>
-                    <ul className="mt-2 space-y-1 text-sm text-gray-300">
-                      <li>• JWT token expiration is set correctly</li>
-                      <li>• Password hashing uses bcrypt with cost factor 12</li>
-                      <li>• Session management looks secure</li>
-                    </ul>
-                    <p className="mt-2 text-sm">One suggestion: consider adding rate limiting to prevent brute force attacks.</p>
+            {/* Messages area */}
+            <div className="flex-1 p-6 overflow-auto">
+              <div className="space-y-6 max-w-2xl mx-auto">
+                {/* Example messages - Tesla minimal style */}
+                <div className="flex gap-3">
+                  <div className="w-8 h-8 bg-neutral-800 rounded-full flex-shrink-0"></div>
+                  <div className="bg-neutral-900 rounded-2xl rounded-tl-none px-4 py-3 max-w-md">
+                    <p className="text-sm">Can you review my authentication implementation? I'm particularly concerned about the token refresh flow.</p>
                   </div>
-                  <span className="text-xs text-gray-500 mt-1 block">Hermes · 2 hours ago</span>
+                </div>
+                <div className="flex gap-3 justify-end">
+                  <div className="bg-neutral-800 rounded-2xl rounded-tr-none px-4 py-3 max-w-md">
+                    <p className="text-sm">Sure, I'd be happy to help review that. Can you share the relevant code snippets?</p>
+                  </div>
+                </div>
+                <div className="flex gap-3">
+                  <div className="w-8 h-8 bg-neutral-800 rounded-full flex-shrink-0"></div>
+                  <div className="bg-neutral-900 rounded-2xl rounded-tl-none px-4 py-3 max-w-md">
+                    <p className="text-sm">Here's the token refresh function I'm using:</p>
+                    <code className="block mt-2 p-3 bg-neutral-950 rounded-lg text-xs text-gray-400 overflow-x-auto">
+                      {`async function refreshToken() {\n  const response = await fetch('/api/refresh', {\n    method: 'POST',\n    credentials: 'include'\n  });\n  return response.json();\n}`}
+                    </code>
+                  </div>
                 </div>
               </div>
             </div>
 
+            {/* Message input */}
             <div className="p-4 border-t border-white/5">
-              <div className="flex gap-3">
+              <div className="flex items-center gap-3 max-w-3xl mx-auto">
                 <input
                   type="text"
-                  placeholder="Type your message..."
-                  className="flex-1 px-4 py-3 bg-white/5 rounded-xl border border-white/10 focus:border-purple-500/50 focus:outline-none"
+                  placeholder="Type a message..."
+                  className="flex-1 tesla-input py-3"
                 />
-                <button className="px-4 py-3 bg-gradient-to-r from-purple-600 to-cyan-600 rounded-xl font-semibold hover:opacity-90 transition-opacity flex items-center gap-2">
+                <button className="w-10 h-10 bg-white text-black rounded-lg flex items-center justify-center hover:bg-gray-100 transition-colors">
                   <Send size={18} />
                 </button>
               </div>
@@ -114,11 +129,10 @@ export default function ChatPage() {
         ) : (
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center">
-              <div className="w-16 h-16 rounded-2xl bg-purple-500/20 flex items-center justify-center mx-auto mb-4">
-                <MessageSquare size={32} className="text-purple-400" />
+              <div className="w-16 h-16 bg-neutral-900 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <MessageSquare size={24} className="text-gray-500" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">Select a conversation</h3>
-              <p className="text-gray-500">Choose a conversation from the list or start a new one</p>
+              <p className="text-gray-500">Select a conversation to start chatting</p>
             </div>
           </div>
         )}

@@ -16,126 +16,117 @@ export default function KeysPage() {
   const [visibleKeys, setVisibleKeys] = useState<number[]>([])
 
   const filteredKeys = mockApiKeys.filter(key =>
-    key.name.toLowerCase().includes(searchQuery.toLowerCase())
+    key.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    key.provider.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
-  const copyToClipboard = async (text: string, id: number) => {
-    await navigator.clipboard.writeText(text)
+  const handleCopy = (id: number, prefix: string) => {
+    navigator.clipboard.writeText(`sk-${prefix}`)
     setCopiedId(id)
     setTimeout(() => setCopiedId(null), 2000)
   }
 
-  const toggleKeyVisibility = (id: number) => {
+  const toggleVisibility = (id: number) => {
     setVisibleKeys(prev =>
       prev.includes(id) ? prev.filter(k => k !== id) : [...prev, id]
     )
   }
 
   return (
-    <div className="p-8">
+    <div className="p-8 max-w-5xl mx-auto">
+      {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold mb-2">API Keys</h1>
-          <p className="text-gray-400">Manage your AI provider API keys securely</p>
+          <h1 className="text-2xl font-semibold mb-1">API Keys</h1>
+          <p className="text-gray-400 text-sm">Manage your API keys for AI providers</p>
         </div>
         <button
           onClick={() => setShowAddModal(true)}
-          className="flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-purple-600 to-cyan-600 rounded-xl font-semibold hover:opacity-90 transition-opacity"
+          className="flex items-center gap-2 px-4 py-2.5 bg-white text-black rounded-lg font-medium text-sm hover:bg-gray-100 transition-colors"
         >
-          <Plus size={18} />
-          Add API Key
+          <Plus size={16} />
+          Add Key
         </button>
       </div>
 
-      <div className="mb-6">
-        <div className="relative max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
-          <input
-            type="text"
-            placeholder="Search API keys..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-white/5 rounded-xl border border-white/10 focus:border-purple-500/50 focus:outline-none"
-          />
-        </div>
+      {/* Search */}
+      <div className="relative mb-6">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search keys..."
+          className="w-full pl-12 pr-4 py-3 bg-neutral-900 border border-white/10 rounded-lg focus:outline-none focus:border-white/20"
+        />
       </div>
 
-      <div className="space-y-4">
+      {/* Keys list */}
+      <div className="space-y-3">
         {filteredKeys.map((key) => (
-          <div key={key.id} className="glass rounded-2xl p-6">
+          <div key={key.id} className="tesla-card">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                  key.provider === 'openai' ? 'bg-green-500/20' : 'bg-purple-500/20'
-                }`}>
-                  <Key className={key.provider === 'openai' ? 'text-green-400' : 'text-purple-400'} size={24} />
+                <div className="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center">
+                  <Key size={18} className="text-gray-400" />
                 </div>
                 <div>
-                  <h3 className="font-semibold mb-1">{key.name}</h3>
-                  <div className="flex items-center gap-4 text-sm text-gray-500">
-                    <span className="capitalize">{key.provider}</span>
-                    <span>Created {key.createdAt}</span>
+                  <div className="flex items-center gap-3">
+                    <p className="font-medium">{key.name}</p>
+                    <span className={`text-xs px-2 py-0.5 rounded-full ${
+                      key.isActive 
+                        ? 'bg-green-500/10 text-green-400' 
+                        : 'bg-neutral-800 text-gray-500'
+                    }`}>
+                      {key.isActive ? 'Active' : 'Inactive'}
+                    </span>
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-neutral-800 text-gray-400 capitalize">
+                      {key.provider}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-4 mt-1 text-sm text-gray-500">
+                    <span>{key.prefix}</span>
+                    <span>•</span>
                     <span>{key.usedCount.toLocaleString()} requests</span>
+                    <span>•</span>
+                    <span>Created {key.createdAt}</span>
                   </div>
                 </div>
               </div>
-
-              <div className="flex items-center gap-3">
-                <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-                  key.isActive
-                    ? 'bg-green-500/20 text-green-400'
-                    : 'bg-gray-500/20 text-gray-400'
-                }`}>
-                  {key.isActive ? 'Active' : 'Disabled'}
-                </div>
-
+              <div className="flex items-center gap-2">
                 <button
-                  onClick={() => toggleKeyVisibility(key.id)}
-                  className="p-2 hover:bg-white/5 rounded-lg"
+                  onClick={() => toggleVisibility(key.id)}
+                  className="w-9 h-9 bg-neutral-800 hover:bg-neutral-700 rounded-lg flex items-center justify-center transition-colors"
                 >
-                  {visibleKeys.includes(key.id) ? (
-                    <EyeOff size={18} className="text-gray-400" />
-                  ) : (
-                    <Eye size={18} className="text-gray-400" />
-                  )}
+                  {visibleKeys.includes(key.id) ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
-
                 <button
-                  onClick={() => copyToClipboard(key.prefix, key.id)}
-                  className="p-2 hover:bg-white/5 rounded-lg"
+                  onClick={() => handleCopy(key.id, key.prefix)}
+                  className="w-9 h-9 bg-neutral-800 hover:bg-neutral-700 rounded-lg flex items-center justify-center transition-colors"
                 >
-                  {copiedId === key.id ? (
-                    <Check size={18} className="text-green-400" />
-                  ) : (
-                    <Copy size={18} className="text-gray-400" />
-                  )}
+                  {copiedId === key.id ? <Check size={16} className="text-green-400" /> : <Copy size={16} />}
                 </button>
-
-                <button className="p-2 hover:bg-red-500/10 rounded-lg">
-                  <Trash2 size={18} className="text-red-400" />
+                <button className="w-9 h-9 bg-neutral-800 hover:bg-red-500/20 rounded-lg flex items-center justify-center transition-colors group">
+                  <Trash2 size={16} className="text-gray-400 group-hover:text-red-400" />
                 </button>
               </div>
-            </div>
-
-            <div className="mt-4 p-3 bg-white/5 rounded-xl font-mono text-sm">
-              {visibleKeys.includes(key.id) ? 'sk-••••••••••••••••••••••••' : key.prefix}
             </div>
           </div>
         ))}
       </div>
 
+      {/* Empty state */}
       {filteredKeys.length === 0 && (
-        <div className="text-center py-12">
-          <div className="w-16 h-16 rounded-2xl bg-purple-500/20 flex items-center justify-center mx-auto mb-4">
-            <Key size={32} className="text-purple-400" />
+        <div className="text-center py-16">
+          <div className="w-16 h-16 bg-neutral-900 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <Key size={24} className="text-gray-500" />
           </div>
-          <h3 className="text-lg font-semibold mb-2">No API keys found</h3>
-          <p className="text-gray-500 mb-4">Add your first API key to start using the platform</p>
+          <p className="text-gray-500 mb-4">No API keys found</p>
           <button
             onClick={() => setShowAddModal(true)}
-            className="px-4 py-2 bg-gradient-to-r from-purple-600 to-cyan-600 rounded-xl font-semibold hover:opacity-90 transition-opacity"
+            className="text-sm text-white hover:underline"
           >
-            Add API Key
+            Add your first API key
           </button>
         </div>
       )}

@@ -2,124 +2,100 @@ import Link from 'next/link'
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen">
-      <nav className="fixed top-0 left-0 right-0 z-50 glass">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center font-bold text-xl">
+    <main className="bg-black text-white min-h-screen">
+      {/* Tesla-style Navigation - Minimal, transparent */}
+      <nav className="fixed top-0 left-0 right-0 z-50 tesla-nav">
+        <div className="max-w-6xl mx-auto px-8 py-5 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center font-bold text-black text-sm">
               H
             </div>
-            <span className="font-bold text-xl">Hermes Platform</span>
+            <span className="font-semibold text-base tracking-tight">Hermes</span>
           </div>
-          <div className="flex items-center gap-4">
-            <Link href="/login" className="px-4 py-2 text-sm font-medium hover:text-purple-400 transition-colors">
+          <div className="flex items-center gap-8">
+            <Link href="/login" className="text-sm text-gray-400 hover:text-white transition-colors">
               Sign In
             </Link>
-            <Link href="/register" className="px-5 py-2.5 bg-gradient-to-r from-purple-600 to-cyan-600 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity">
+            <Link href="/register" className="btn-primary text-sm">
               Get Started
             </Link>
           </div>
         </div>
       </nav>
 
-      <section className="relative pt-32 pb-20 px-6">
-        <div className="max-w-5xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8">
-            <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-            <span className="text-sm">Now in Public Beta</span>
-          </div>
-          
-          <h1 className="text-5xl md:text-7xl font-bold mb-6">
-            <span className="gradient-text">Configure Your Own AI</span>
-            <br />
-            <span className="text-white">Build Powerful Agents</span>
+      {/* Hero Section - Clean, bold typography */}
+      <section className="tesla-section pt-40 pb-32 text-center">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
+            Configure Your Own AI
           </h1>
-          
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10">
-            Bring your own API keys. Configure custom personas. Collaborate with your team. 
-            Deploy AI agents that work exactly how you need them.
+          <p className="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto mb-10 font-light">
+            Bring your own API keys. Build custom agents. Collaborate with your team. 
+            Deploy AI that works exactly how you need it.
           </p>
-          
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/register" className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-purple-600 to-cyan-600 rounded-xl font-semibold text-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+            <Link href="/register" className="btn-primary text-base px-8 py-4">
               Start Free
-              <span>→</span>
             </Link>
-            <Link href="/demo" className="w-full sm:w-auto px-8 py-4 glass rounded-xl font-semibold text-lg hover:bg-white/10 transition-colors flex items-center justify-center gap-2">
-              Try Demo
+            <Link href="/demo" className="btn-ghost text-base px-8 py-4">
+              View Demo
             </Link>
           </div>
-        </div>
-
-        <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
-          <div className="absolute top-20 left-10 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl animate-float"></div>
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-float" style={{animationDelay: '2s'}}></div>
         </div>
       </section>
 
-      <section className="py-20 px-6">
+      {/* Features Section - Grid, minimal cards */}
+      <section className="py-32 px-8">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
-            Everything You Need to Build with AI
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-20">
+            Built for AI Agents
           </h2>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="glass rounded-2xl p-6 hover:bg-white/5 transition-colors group">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500/20 to-purple-500/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <span className="text-2xl">🔑</span>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Bring Your Own Keys</h3>
-              <p className="text-gray-400">
-                Use your OpenAI, Anthropic, or custom API keys. Full control over your spending and models.
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="tesla-feature-card">
+              <div className="text-3xl mb-6">🔑</div>
+              <h3 className="text-xl font-semibold mb-3">Bring Your Own Keys</h3>
+              <p className="text-gray-400 leading-relaxed">
+                Use your OpenAI, Anthropic, or custom API keys. Full control over models and spending.
               </p>
             </div>
 
-            <div className="glass rounded-2xl p-6 hover:bg-white/5 transition-colors group">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500/20 to-cyan-500/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <span className="text-2xl">🎭</span>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Custom Personas</h3>
-              <p className="text-gray-400">
-                Configure agent personalities, behaviors, and capabilities. Build AI that fits your needs.
+            <div className="tesla-feature-card">
+              <div className="text-3xl mb-6">🎭</div>
+              <h3 className="text-xl font-semibold mb-3">Custom Personas</h3>
+              <p className="text-gray-400 leading-relaxed">
+                Configure agent personalities, behaviors, and capabilities to fit your exact needs.
               </p>
             </div>
 
-            <div className="glass rounded-2xl p-6 hover:bg-white/5 transition-colors group">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500/20 to-green-500/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <span className="text-2xl">👥</span>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Team Collaboration</h3>
-              <p className="text-gray-400">
+            <div className="tesla-feature-card">
+              <div className="text-3xl mb-6">👥</div>
+              <h3 className="text-xl font-semibold mb-3">Team Collaboration</h3>
+              <p className="text-gray-400 leading-relaxed">
                 Share workspaces, track usage, and collaborate with your team in real-time.
               </p>
             </div>
 
-            <div className="glass rounded-2xl p-6 hover:bg-white/5 transition-colors group">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500/20 to-orange-500/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <span className="text-2xl">🧩</span>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Extensible Tools</h3>
-              <p className="text-gray-400">
-                Web search, code execution, API integrations, and custom plugins. Make your agent powerful.
+            <div className="tesla-feature-card">
+              <div className="text-3xl mb-6">🧩</div>
+              <h3 className="text-xl font-semibold mb-3">Extensible Tools</h3>
+              <p className="text-gray-400 leading-relaxed">
+                Web search, code execution, API integrations, and custom plugins.
               </p>
             </div>
 
-            <div className="glass rounded-2xl p-6 hover:bg-white/5 transition-colors group">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-500/20 to-pink-500/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <span className="text-2xl">📊</span>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Usage Analytics</h3>
-              <p className="text-gray-400">
-                Track messages, tokens, and costs. Understand how your agents are performing.
+            <div className="tesla-feature-card">
+              <div className="text-3xl mb-6">📊</div>
+              <h3 className="text-xl font-semibold mb-3">Usage Analytics</h3>
+              <p className="text-gray-400 leading-relaxed">
+                Track messages, tokens, and costs. Understand how your agents perform.
               </p>
             </div>
 
-            <div className="glass rounded-2xl p-6 hover:bg-white/5 transition-colors group">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-500/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <span className="text-2xl">🔒</span>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Secure by Design</h3>
-              <p className="text-gray-400">
+            <div className="tesla-feature-card">
+              <div className="text-3xl mb-6">🔒</div>
+              <h3 className="text-xl font-semibold mb-3">Secure by Design</h3>
+              <p className="text-gray-400 leading-relaxed">
                 Enterprise-grade security. Your API keys are encrypted. Your data stays yours.
               </p>
             </div>
@@ -127,96 +103,94 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-20 px-6">
+      {/* Pricing Section - Tesla minimal cards */}
+      <section className="py-32 px-8 bg-neutral-950">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
             Simple, Transparent Pricing
           </h2>
-          <p className="text-gray-400 text-center mb-12">
+          <p className="text-gray-400 text-center mb-16 text-lg">
             Start free, upgrade when you need more power
           </p>
           
           <div className="grid md:grid-cols-3 gap-6">
-            <div className="glass rounded-2xl p-8">
-              <h3 className="text-lg font-semibold text-gray-400 mb-2">Free</h3>
-              <div className="text-4xl font-bold mb-6">
-                $0<span className="text-lg font-normal text-gray-500">/mo</span>
-              </div>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-center gap-2">
-                  <span className="text-green-400">✓</span> 3 workspaces
+            {/* Free Tier */}
+            <div className="tesla-pricing-card">
+              <h3 className="text-lg font-semibold text-gray-400 mb-4">Free</h3>
+              <div className="text-4xl font-bold mb-6">$0</div>
+              <ul className="space-y-3 mb-8 text-sm">
+                <li className="flex items-center gap-3">
+                  <span className="text-gray-400">✓</span> 3 workspaces
                 </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-green-400">✓</span> 100 messages/mo
+                <li className="flex items-center gap-3">
+                  <span className="text-gray-400">✓</span> 100 messages/mo
                 </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-green-400">✓</span> Basic agents
+                <li className="flex items-center gap-3">
+                  <span className="text-gray-400">✓</span> Basic agents
                 </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-green-400">✓</span> Community support
+                <li className="flex items-center gap-3">
+                  <span className="text-gray-400">✓</span> Community support
                 </li>
               </ul>
-              <Link href="/register" className="block w-full py-3 text-center glass rounded-xl hover:bg-white/10 transition-colors font-medium">
+              <Link href="/register" className="btn-ghost w-full text-center block py-3">
                 Get Started
               </Link>
             </div>
 
-            <div className="glass rounded-2xl p-8 border-2 border-purple-500/50 relative">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-gradient-to-r from-purple-600 to-cyan-600 rounded-full text-xs font-semibold">
-                Popular
+            {/* Starter Tier - Featured */}
+            <div className="tesla-pricing-card featured relative">
+              <div className="absolute -top-3 left-6 px-3 py-1 bg-blue-600 rounded-full text-xs font-medium">
+                Most Popular
               </div>
-              <h3 className="text-lg font-semibold text-purple-400 mb-2">Starter</h3>
-              <div className="text-4xl font-bold mb-6">
-                $29<span className="text-lg font-normal text-gray-500">/mo</span>
-              </div>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-center gap-2">
-                  <span className="text-green-400">✓</span> 10 workspaces
+              <h3 className="text-lg font-semibold text-blue-400 mb-4">Starter</h3>
+              <div className="text-4xl font-bold mb-6">$29<span className="text-lg font-normal text-gray-500">/mo</span></div>
+              <ul className="space-y-3 mb-8 text-sm">
+                <li className="flex items-center gap-3">
+                  <span className="text-gray-400">✓</span> 10 workspaces
                 </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-green-400">✓</span> 10,000 messages/mo
+                <li className="flex items-center gap-3">
+                  <span className="text-gray-400">✓</span> 10,000 messages/mo
                 </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-green-400">✓</span> Advanced agents
+                <li className="flex items-center gap-3">
+                  <span className="text-gray-400">✓</span> Advanced agents
                 </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-green-400">✓</span> API access
+                <li className="flex items-center gap-3">
+                  <span className="text-gray-400">✓</span> API access
                 </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-green-400">✓</span> Priority support
+                <li className="flex items-center gap-3">
+                  <span className="text-gray-400">✓</span> Priority support
                 </li>
               </ul>
-              <Link href="/register?plan=starter" className="block w-full py-3 text-center bg-gradient-to-r from-purple-600 to-cyan-600 rounded-xl font-semibold hover:opacity-90 transition-opacity">
+              <Link href="/register?plan=starter" className="btn-cta w-full text-center block py-3">
                 Start Free Trial
               </Link>
             </div>
 
-            <div className="glass rounded-2xl p-8">
-              <h3 className="text-lg font-semibold text-gray-400 mb-2">Pro</h3>
-              <div className="text-4xl font-bold mb-6">
-                $99<span className="text-lg font-normal text-gray-500">/mo</span>
-              </div>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-center gap-2">
-                  <span className="text-green-400">✓</span> Unlimited workspaces
+            {/* Pro Tier */}
+            <div className="tesla-pricing-card">
+              <h3 className="text-lg font-semibold text-gray-400 mb-4">Pro</h3>
+              <div className="text-4xl font-bold mb-6">$99<span className="text-lg font-normal text-gray-500">/mo</span></div>
+              <ul className="space-y-3 mb-8 text-sm">
+                <li className="flex items-center gap-3">
+                  <span className="text-gray-400">✓</span> Unlimited workspaces
                 </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-green-400">✓</span> 100,000 messages/mo
+                <li className="flex items-center gap-3">
+                  <span className="text-gray-400">✓</span> 100,000 messages/mo
                 </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-green-400">✓</span> Team collaboration
+                <li className="flex items-center gap-3">
+                  <span className="text-gray-400">✓</span> Team collaboration
                 </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-green-400">✓</span> Custom agents
+                <li className="flex items-center gap-3">
+                  <span className="text-gray-400">✓</span> Custom agents
                 </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-green-400">✓</span> SSO & advanced security
+                <li className="flex items-center gap-3">
+                  <span className="text-gray-400">✓</span> SSO & advanced security
                 </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-green-400">✓</span> Dedicated support
+                <li className="flex items-center gap-3">
+                  <span className="text-gray-400">✓</span> Dedicated support
                 </li>
               </ul>
-              <Link href="/register?plan=pro" className="block w-full py-3 text-center glass rounded-xl hover:bg-white/10 transition-colors font-medium">
+              <Link href="/register?plan=pro" className="btn-ghost w-full text-center block py-3">
                 Contact Sales
               </Link>
             </div>
@@ -224,18 +198,19 @@ export default function HomePage() {
         </div>
       </section>
 
-      <footer className="py-12 px-6 border-t border-white/10">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center font-bold text-sm">
+      {/* Footer - Minimal */}
+      <footer className="py-16 px-8 border-t border-white/5">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center font-bold text-black text-sm">
               H
             </div>
             <span className="font-semibold">Hermes Platform</span>
           </div>
-          <div className="flex items-center gap-6 text-sm text-gray-400">
-            <span>© 2024 Hermes Platform. All rights reserved.</span>
+          <div className="flex items-center gap-8 text-sm text-gray-400">
+            <span>© 2024 Hermes Platform</span>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6">
             <Link href="/privacy" className="text-sm text-gray-400 hover:text-white transition-colors">Privacy</Link>
             <Link href="/terms" className="text-sm text-gray-400 hover:text-white transition-colors">Terms</Link>
           </div>
