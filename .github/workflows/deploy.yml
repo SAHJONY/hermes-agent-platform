@@ -39,8 +39,10 @@ jobs:
       - name: Generate Prisma Client
         run: npx prisma generate
 
-      - name: Link Vercel Project
-        run: npx vercel link --yes
+      - name: Create Vercel Project Settings
+        run: |
+          mkdir -p .vercel
+          echo '{"projectId":"${{ secrets.VERCEL_PROJECT_ID }}","orgId":"${{ secrets.VERCEL_ORG_ID }}","projectName":"hermes-agent-platform"}' > .vercel/project.json
 
       - name: Build Project Artifacts
         run: npx vercel build --prod
