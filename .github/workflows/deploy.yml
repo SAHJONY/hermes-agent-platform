@@ -8,15 +8,9 @@ on:
     branches:
       - master
 
-# Only allow one concurrent deployment, cancel in-progress if new one starts
 concurrency:
   group: ${{ github.REF }}
   cancel-in-progress: true
-
-env:
-  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
 jobs:
   deploy:
@@ -39,15 +33,22 @@ jobs:
       - name: Generate Prisma Client
         run: npx prisma generate
 
-      - name: Create Vercel project directory
+      - name: Verify Vercel Token
         run: |
-          mkdir -p .vercel
-          echo '{"projectId":"'"$VERCEL_PROJECT_ID"'","orgId":"'"$VERCEL_ORG_ID"'","projectName":"hermes-agent-platform"}' > .vercel/project.json
+          echo "Testing Vercel authentication..."
+          echo "Token prefix: ${VERCEL_TOKEN:0:8}..."
+          echo "Token length: ${#VERCEL_TOKEN}"
+          
+          # Test token via API
+          RESPONSE=$(curl -s -w "%{http_code}" -o /tmp/vercel_response.json -H "Authorization: Bearer $VERCEL_TOKEN" "https://api.vercel.com/v2/user")
+          echo "API Response code: $RESPONSE"
+          cat /tmp/vercel_response.json | head -c 200
 
       - name: Deploy to Vercel
-        run: npx vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }} --yes
+        run: |
+          echo "Starting Vercel deployment..."
+          npx vercel deploy --prod --token="$VERCEL_TOKEN" --yes
 
-  # Optional: Run tests after deployment
   test:
     runs-on: ubuntu-latest
     needs: deploy
