@@ -39,27 +39,13 @@ jobs:
       - name: Generate Prisma Client
         run: npx prisma generate
 
-      - name: Debug - Check token format
-        run: |
-          echo "Token starts with: ${VERCEL_TOKEN:0:4}"
-          echo "Token length: ${#VERCEL_TOKEN}"
-
       - name: Create Vercel project directory
         run: |
           mkdir -p .vercel
           echo '{"projectId":"'"$VERCEL_PROJECT_ID"'","orgId":"'"$VERCEL_ORG_ID"'","projectName":"hermes-agent-platform"}' > .vercel/project.json
-          cat .vercel/project.json
-
-      - name: Debug - Verify Vercel CLI version
-        run: |
-          npx vercel --version
-          echo "VERCEL_ORG_ID: $VERCEL_ORG_ID"
-          echo "VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID"
-          echo "Token prefix: ${VERCEL_TOKEN:0:4}"
 
       - name: Deploy to Vercel
-        run: |
-          npx vercel deploy --prod --token=$VERCEL_TOKEN --yes --debug 2>&1 || true
+        run: npx vercel deploy --prod --token=$VERCEL_TOKEN --yes
 
   # Optional: Run tests after deployment
   test:
