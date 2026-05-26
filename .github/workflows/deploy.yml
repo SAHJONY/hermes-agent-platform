@@ -37,7 +37,11 @@ jobs:
           echo '{"projectId":"'$VERCEL_PROJECT_ID'","orgId":"'$VERCEL_ORG_ID'","projectName":"hermes-agent-platform"}' > .vercel/project.json
 
       - name: Deploy to Vercel
-        run: npx vercel deploy --prod --token="$VERCEL_TOKEN" --yes
+        run: |
+          mkdir -p .vercel
+          echo '{"projectId":"'$VERCEL_PROJECT_ID'","orgId":"'$VERCEL_ORG_ID'","projectName":"hermes-agent-platform"}' > .vercel/project.json
+          echo "Starting deployment..."
+          npx vercel deploy --prod --token="$VERCEL_TOKEN" --yes 2>&1
 
   test:
     runs-on: ubuntu-latest
