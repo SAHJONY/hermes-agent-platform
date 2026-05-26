@@ -37,7 +37,14 @@ jobs:
           echo '{"projectId":"'$VERCEL_PROJECT_ID'","orgId":"'$VERCEL_ORG_ID'","projectName":"hermes-agent-platform"}' > .vercel/project.json
 
       - name: Deploy to Vercel
-        run: npx vercel deploy --prod --token=$VERCEL_TOKEN --yes
+        run: |
+          echo "=== Vercel Debug Info ==="
+          echo "Token length: ${#VERCEL_TOKEN}"
+          echo "Token prefix: ${VERCEL_TOKEN:0:10}"
+          echo "ORG ID: $VERCEL_ORG_ID"
+          echo "PROJECT ID: $VERCEL_PROJECT_ID"
+          echo "=== Starting Deploy ==="
+          npx vercel deploy --prod --token=$VERCEL_TOKEN --yes --debug 2>&1 | head -100
 
   test:
     runs-on: ubuntu-latest
