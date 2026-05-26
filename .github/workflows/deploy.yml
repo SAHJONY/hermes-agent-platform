@@ -35,7 +35,7 @@ jobs:
         run: npx prisma generate
 
       - name: Deploy to Vercel
-        uses: actions/vercel-action@v0.8.0
+        uses: vercel/vercel-action@v0.8.0
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
