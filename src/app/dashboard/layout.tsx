@@ -10,11 +10,13 @@ import {
   MessageSquare, 
   Key, 
   Users, 
-  Settings, 
+  Settings,
   CreditCard,
   LogOut,
   Plus,
-  Bot
+  Bot,
+  Shield,
+  BarChart3
 } from 'lucide-react'
 
 const navigation = [
@@ -24,6 +26,7 @@ const navigation = [
   { name: 'Team', href: '/dashboard/team', icon: Users },
   { name: 'Billing', href: '/dashboard/billing', icon: CreditCard },
   { name: 'Settings', href: '/dashboard/settings', icon: Settings },
+  { name: 'Admin Panel', href: '/dashboard/admin', icon: Shield, ownerOnly: true },
 ]
 
 export default function DashboardLayout({
@@ -71,6 +74,10 @@ export default function DashboardLayout({
 
         <nav className="flex-1 p-4 space-y-1">
           {navigation.map((item) => {
+            // Hide owner-only items for non-owners/admins
+            if (item.ownerOnly && !['owner', 'admin'].includes((session?.user as {role?: string})?.role || '')) {
+              return null
+            }
             const isActive = pathname === item.href
             return (
               <Link
@@ -80,7 +87,7 @@ export default function DashboardLayout({
                   isActive 
                     ? 'bg-white/10 text-white' 
                     : 'text-gray-400 hover:text-white hover:bg-white/5'
-                }`}
+                } ${item.ownerOnly ? 'border border-blue-500/30 bg-blue-500/10' : ''}`}
               >
                 <item.icon size={18} />
                 {item.name}

@@ -3,6 +3,17 @@ import { NextResponse } from 'next/server'
 
 export default withAuth(
   function middleware(req) {
+    const token = req.nextauth.token
+    const path = req.nextUrl.pathname
+
+    // Admin route protection - require owner or admin role
+    if (path.startsWith('/dashboard/admin')) {
+      const userRole = token?.role as string
+      if (userRole !== 'owner' && userRole !== 'admin') {
+        return NextResponse.redirect(new URL('/dashboard', req.url))
+      }
+    }
+
     return NextResponse.next()
   },
   {

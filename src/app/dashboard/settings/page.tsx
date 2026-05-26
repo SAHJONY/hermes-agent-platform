@@ -17,6 +17,17 @@ export default function SettingsPage() {
     email: 'alex@company.com',
     bio: 'Full-stack developer passionate about AI and automation',
   })
+  const [notifications, setNotifications] = useState({
+    email: true,
+    push: true,
+    weeklyDigest: true,
+    marketing: false,
+  })
+  const [compactMode, setCompactMode] = useState(false)
+
+  const toggleNotification = (key: keyof typeof notifications) => {
+    setNotifications(prev => ({ ...prev, [key]: !prev[key] }))
+  }
 
   return (
     <div className="p-8 max-w-4xl mx-auto">
@@ -100,24 +111,54 @@ export default function SettingsPage() {
             <div className="tesla-card">
               <h2 className="text-lg font-semibold mb-6">Notification Preferences</h2>
               <div className="space-y-4">
-                {[
-                  { label: 'Email notifications', description: 'Receive email updates about your account', enabled: true },
-                  { label: 'Push notifications', description: 'Get push notifications for new messages', enabled: true },
-                  { label: 'Weekly digest', description: 'Receive a weekly summary of your activity', enabled: true },
-                  { label: 'Marketing emails', description: 'Receive updates about new features and offers', enabled: false },
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center justify-between p-4 bg-neutral-900 rounded-lg">
-                    <div>
-                      <p className="font-medium text-sm">{item.label}</p>
-                      <p className="text-xs text-gray-500 mt-1">{item.description}</p>
-                    </div>
-                    <button 
-                      className={`tesla-toggle ${item.enabled ? 'active' : ''}`}
-                      role="switch"
-                      aria-checked={item.enabled}
-                    />
+                <div className="flex items-center justify-between p-4 bg-neutral-900 rounded-lg">
+                  <div>
+                    <p className="font-medium text-sm">Email notifications</p>
+                    <p className="text-xs text-gray-500 mt-1">Receive email updates about your account</p>
                   </div>
-                ))}
+                  <button 
+                    className={`tesla-toggle ${notifications.email ? 'active' : ''}`}
+                    onClick={() => toggleNotification('email')}
+                    role="switch"
+                    aria-checked={notifications.email}
+                  />
+                </div>
+                <div className="flex items-center justify-between p-4 bg-neutral-900 rounded-lg">
+                  <div>
+                    <p className="font-medium text-sm">Push notifications</p>
+                    <p className="text-xs text-gray-500 mt-1">Get push notifications for new messages</p>
+                  </div>
+                  <button 
+                    className={`tesla-toggle ${notifications.push ? 'active' : ''}`}
+                    onClick={() => toggleNotification('push')}
+                    role="switch"
+                    aria-checked={notifications.push}
+                  />
+                </div>
+                <div className="flex items-center justify-between p-4 bg-neutral-900 rounded-lg">
+                  <div>
+                    <p className="font-medium text-sm">Weekly digest</p>
+                    <p className="text-xs text-gray-500 mt-1">Receive a weekly summary of your activity</p>
+                  </div>
+                  <button 
+                    className={`tesla-toggle ${notifications.weeklyDigest ? 'active' : ''}`}
+                    onClick={() => toggleNotification('weeklyDigest')}
+                    role="switch"
+                    aria-checked={notifications.weeklyDigest}
+                  />
+                </div>
+                <div className="flex items-center justify-between p-4 bg-neutral-900 rounded-lg">
+                  <div>
+                    <p className="font-medium text-sm">Marketing emails</p>
+                    <p className="text-xs text-gray-500 mt-1">Receive updates about new features and offers</p>
+                  </div>
+                  <button 
+                    className={`tesla-toggle ${notifications.marketing ? 'active' : ''}`}
+                    onClick={() => toggleNotification('marketing')}
+                    role="switch"
+                    aria-checked={notifications.marketing}
+                  />
+                </div>
               </div>
             </div>
           )}
@@ -209,7 +250,12 @@ export default function SettingsPage() {
                     <p className="font-medium text-sm">Compact Mode</p>
                     <p className="text-xs text-gray-500 mt-1">Reduce spacing for more content</p>
                   </div>
-                  <button className="tesla-toggle" role="switch" aria-checked="false" />
+                  <button 
+                    className={`tesla-toggle ${compactMode ? 'active' : ''}`}
+                    onClick={() => setCompactMode(!compactMode)}
+                    role="switch"
+                    aria-checked={compactMode}
+                  />
                 </div>
               </div>
             </div>
