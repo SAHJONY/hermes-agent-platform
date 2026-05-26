@@ -36,11 +36,21 @@ jobs:
           mkdir -p .vercel
           echo '{"projectId":"'$VERCEL_PROJECT_ID'","orgId":"'$VERCEL_ORG_ID'","projectName":"hermes-agent-platform"}' > .vercel/project.json
 
+      - name: Debug secret
+        run: |
+          echo "Token length: ${#VERCEL_TOKEN}"
+          echo "Token prefix 10 chars: ${VERCEL_TOKEN:0:10}"
+          echo "ORG_ID: $VERCEL_ORG_ID"
+          echo "PROJECT_ID: $VERCEL_PROJECT_ID"
+          echo "---Testing direct curl---"
+          curl -s -H "Authorization: Bearer $VERCEL_TOKEN" "https://api.vercel.com/v2/user"
+
       - name: Deploy to Vercel
         run: |
           mkdir -p .vercel
           echo '{"projectId":"'$VERCEL_PROJECT_ID'","orgId":"'$VERCEL_ORG_ID'","projectName":"hermes-agent-platform"}' > .vercel/project.json
-          npx vercel deploy --prod --token="${{ secrets.VERCEL_TOKEN }}" --yes
+          echo "Deploying with token..."
+          npx vercel deploy --prod --token="$VERCEL_TOKEN" --yes
 
   test:
     runs-on: ubuntu-latest
