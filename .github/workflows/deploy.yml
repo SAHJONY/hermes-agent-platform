@@ -45,10 +45,10 @@ jobs:
           echo '{"projectId":"${{ secrets.VERCEL_PROJECT_ID }}","orgId":"${{ secrets.VERCEL_ORG_ID }}","projectName":"hermes-agent-platform"}' > .vercel/project.json
 
       - name: Build Project Artifacts
-        run: npx vercel build --prod
+        run: npx vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy Project Artifacts to Vercel
-        run: npx vercel deploy --prod
+        run: npx vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }}
 
   # Optional: Run tests after deployment
   test:
