@@ -2,6 +2,7 @@
 
 **The Ultimate Autonomous AI Development Platform** - Configure your own AI, collaborate with teams, build powerful workflows, and deploy intelligent agents 24/7.
 
+![Deploy](https://github.com/SAHJONY/hermes-agent-platform/actions/workflows/deploy.yml/badge.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Node](https://img.shields.io/badge/node-%3E%3D18.0.0-green.svg)
 ![Next.js](https://img.shields.io/badge/next.js-14.2-black.svg)
