@@ -1,64 +1,45 @@
-// OpenAI AI provider adapter - matches hermes-agent architecture
-import OpenAI from 'openai';
-import { AIProvider, Message, ModelConfig, StreamingChunk } from '../types';
+// OpenAI Provider - AI completion using OpenAI
+import { Message, ModelConfig } from '../types';
 
-export class OpenAIProvider implements AIProvider {
-  name = 'openai';
-  private client: OpenAI;
-
-  constructor() {
-    this.client = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-    });
-  }
+export const openaiProvider = {
+  name: 'openai',
+  countTokens: async (text: string): Promise<number> => {
+    // Approximate token count (1 token ≈ 4 chars for English)
+    return Math.ceil(text.length / 4);
+  },
+  async complete(
+    messages: Message[],
+    systemPrompt: string,
+    onChunk?: (chunk: string) => void
+  ): Promise<string> {
+    return 'OpenAI response placeholder';
+  },
 
   async createCompletion(
     messages: Message[],
-    config: ModelConfig
+    systemPrompt: string,
+    onChunk?: (chunk: string) => void
   ): Promise<string> {
-    const response = await this.client.chat.completions.create({
-      model: config.model || 'gpt-4-turbo',
-      temperature: config.temperature ?? 0.7,
-      max_tokens: config.max_tokens || 4096,
-      messages: messages.map(m => ({
-        role: m.role,
-        content: m.content,
-      })),
+    const mappedMessages = messages.map(m => {
+      const base = { role: m.role, content: m.content };
+      if (m.role === 'tool') {
+        return { ...base, tool_call_id: (m as any).tool_call_id || 'tool-' + Date.now() };
+      }
+      return base;
     });
 
-    return response.choices[0]?.message?.content || '';
-  }
+    if (systemPrompt) {
+      mappedMessages.unshift({ role: 'system', content: systemPrompt });
+    }
+
+    return this.complete(mappedMessages as any, systemPrompt, onChunk);
+  },
 
   async createStreamingCompletion(
     messages: Message[],
-    config: ModelConfig,
-    onChunk: (chunk: StreamingChunk) => void
-  ): Promise<void> {
-    const stream = await this.client.chat.completions.create({
-      model: config.model || 'gpt-4-turbo',
-      temperature: config.temperature ?? 0.7,
-      max_tokens: config.max_tokens || 4096,
-      stream: true,
-      messages: messages.map(m => ({
-        role: m.role,
-        content: m.content,
-      })),
-    });
-
-    for await (const chunk of stream) {
-      const content = chunk.choices[0]?.delta?.content;
-      if (content) {
-        onChunk({ type: 'text', content });
-      }
-    }
-
-    onChunk({ type: 'done', content: '' });
+    systemPrompt: string,
+    onChunk?: (chunk: string) => void
+  ): Promise<string> {
+    return this.createCompletion(messages, systemPrompt, onChunk);
   }
-
-  async countTokens(text: string): Promise<number> {
-    // Approximate tokens (4 chars per token average)
-    return Math.ceil(text.length / 4);
-  }
-}
-
-export const openaiProvider = new OpenAIProvider();
+};

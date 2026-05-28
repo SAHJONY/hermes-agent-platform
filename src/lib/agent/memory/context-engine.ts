@@ -1,12 +1,12 @@
 // Context Engine - manages conversation memory and context compression
 // Inspired by hermes-agent's context_engine.py
-import { Message, AgentContext, MemoryConfig } from '../types';
+import { Message, AgentContext } from '../types';
 
 export class ContextEngine {
   private maxMessages: number;
   private compressionThreshold: number;
 
-  constructor(config?: MemoryConfig) {
+  constructor(config?: any) {
     this.maxMessages = config?.max_messages || 50;
     this.compressionThreshold = config?.compression_threshold || 40;
   }

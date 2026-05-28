@@ -42,7 +42,7 @@ function isAllowedFile(filename: string): boolean {
 export const fileToolsTool: Tool = {
   name: 'file_operations',
   description: 'Read, write, or list files in the workspace. Use this to inspect code files, write new code, or navigate the project structure. Security: only operates within the workspace directory, prevents path traversal.',
-  category: 'file_operations',
+  
   parameters: {
     type: 'object',
     properties: {
@@ -66,7 +66,7 @@ export const fileToolsTool: Tool = {
     },
     required: ['action', 'path'],
   },
-  handler: async (args: Record<string, unknown>, context: AgentContext): Promise<{tool_call_id: string; result: string; success: boolean; error?: string}> => {
+  execute: async (args: Record<string, unknown>, context: AgentContext): Promise<{tool_call_id: string; result: string; success: boolean; error?: string}> => {
     try {
       const { action, path, content, recursive = false } = args as {
         action: string;

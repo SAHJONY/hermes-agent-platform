@@ -9,7 +9,7 @@ import { Tool, AgentContext } from '../../types';
 export const webSearchTool: Tool = {
   name: 'web_search',
   description: 'Search the web for information using Google. Returns title, URL, and snippet for each result. Use this for current events, facts, or any question requiring up-to-date information.',
-  category: 'web_search',
+  
   parameters: {
     type: 'object',
     properties: {
@@ -25,7 +25,7 @@ export const webSearchTool: Tool = {
     },
     required: ['query'],
   },
-  handler: async (args: Record<string, unknown>, _context: AgentContext): Promise<{tool_call_id: string; result: string; success: boolean; error?: string}> => {
+  execute: async (args: Record<string, unknown>, _context: AgentContext): Promise<{tool_call_id: string; result: string; success: boolean; error?: string}> => {
     try {
       const { query, num_results = 5 } = args as { query: string; num_results?: number };
       

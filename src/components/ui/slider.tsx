@@ -45,7 +45,7 @@ export function Slider({
     document.addEventListener('mouseup', handleMouseUp)
   }
 
-  const updateValue = (clientX: number, trackElement: HTMLElement | null) => {
+  const updateValue = (clientX: number, trackElement: HTMLElement | null | undefined) => {
     if (!trackElement) return
     
     const rect = trackElement.getBoundingClientRect()
@@ -60,19 +60,16 @@ export function Slider({
 
   return (
     <div className={cn('relative w-full h-6 flex items-center', className, disabled && 'opacity-50 cursor-not-allowed')}>
-      {/* Track */}
       <div 
         className="absolute w-full h-1.5 bg-surface rounded-full cursor-pointer"
         onMouseDown={handleMouseDown}
       >
-        {/* Filled portion */}
         <div 
           className="absolute h-full bg-primary rounded-full"
           style={{ width: `${percentage}%` }}
         />
       </div>
 
-      {/* Thumb */}
       <div
         className={cn(
           'absolute w-4 h-4 bg-white rounded-full shadow-md cursor-grab active:cursor-grabbing transition-transform',
@@ -84,8 +81,9 @@ export function Slider({
           e.stopPropagation()
           setIsDragging(true)
           
+          const trackElement = e.currentTarget.parentElement?.parentElement ?? null
           const handleMouseMove = (moveEvent: MouseEvent) => {
-            updateValue(moveEvent.clientX, e.currentTarget.parentElement?.parentElement)
+            updateValue(moveEvent.clientX, trackElement)
           }
           
           const handleMouseUp = () => {

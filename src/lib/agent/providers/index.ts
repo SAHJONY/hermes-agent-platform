@@ -1,4 +1,4 @@
-// Provider exports
-export { AnthropicProvider, anthropicProvider } from './anthropic-provider';
-export { OpenAIProvider, openaiProvider } from './openai-provider';
-export { AIProvider } from '../types';
+// Providers index - re-export all providers
+export { anthropicProvider } from './anthropic-provider';
+export { openaiProvider } from './openai-provider';
+export type { AIProvider } from '../types';

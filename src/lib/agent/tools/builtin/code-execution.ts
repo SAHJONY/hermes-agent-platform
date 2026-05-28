@@ -27,7 +27,7 @@ const RUNTIME_MAP: Record<string, { language: string; version: string }> = {
 export const codeExecutionTool: Tool = {
   name: 'code_execution',
   description: 'Execute Python, JavaScript, TypeScript, Go, Rust, Java, or C++ code in a sandboxed environment. Returns stdout, stderr, and execution time. Useful for data analysis, calculations, testing code snippets, and automation.',
-  category: 'code_execution',
+  
   parameters: {
     type: 'object',
     properties: {
@@ -48,7 +48,7 @@ export const codeExecutionTool: Tool = {
     },
     required: ['code'],
   },
-  handler: async (args: Record<string, unknown>, _context: AgentContext): Promise<{tool_call_id: string; result: string; success: boolean; error?: string}> => {
+  execute: async (args: Record<string, unknown>, _context: AgentContext): Promise<{tool_call_id: string; result: string; success: boolean; error?: string}> => {
     const startTime = Date.now();
     
     try {

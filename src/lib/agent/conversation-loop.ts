@@ -1,19 +1,12 @@
-// Conversation Loop - The core agent brain that orchestrates message flow
-// Inspired by hermes-agent's conversation_loop.py
-// Integrated with Hermes Bridge and Freebuff coding agent
-import { 
-  Message, 
-  AgentContext, 
-  ModelConfig, 
-  StreamingChunk,
-  ToolCall,
-  AIProvider 
-} from './types';
-import { contextEngine } from './memory';
+// ConversationLoop - The primary orchestrator for the agent's message flow
+import { AgentContext, Message } from './types';
 import { toolExecutor } from './tools';
-import { hermesBridge } from './hermes-bridge';
-import { freebuffAgent } from './freebuff-integration';
 import { isCodingTask, truncate, formatTimestamp } from './utils';
+import { freebuffAgent } from './freebuff-agent';
+import { hermesBridge } from './hermes-bridge';
+
+// URL for Hermes agent (if available)
+const HERMES_AGENT_URL = process.env.HERMES_AGENT_URL;
 
 export class ConversationLoop {
   private maxTurns: number;
@@ -24,234 +17,151 @@ export class ConversationLoop {
   constructor(maxTurns = 10, timeoutMs = 120000) {
     this.maxTurns = maxTurns;
     this.timeoutMs = timeoutMs;
-    this.useHermes = !!process.env.HERMES_AGENT_URL;
-    this.useFreebuff = true;
+    this.useHermes = !!HERMES_AGENT_URL;
+    this.useFreebuff = true; // Always enable Freebuff for coding tasks
   }
 
-
-
-  /**
-   * Process a user message and return the agent's response
-   * This is the main entry point for the agent brain
-   * 
-   * Routing priority:
-   * 1. Coding tasks → Freebuff
-   * 2. Complex reasoning → Hermes Agent (if available)
-   * 3. Everything else → Local AI providers
-   */
   async processMessage(
     messages: Message[],
     context: AgentContext,
-    provider: AIProvider,
-    onStream?: (chunk: StreamingChunk) => void
+    provider: any,
+    onStream?: (chunk: { type: string; content?: string }) => void
   ): Promise<string> {
-    let currentMessages = [...messages];
     const userMessage = messages[messages.length - 1]?.content || '';
-    
-    // Priority 1: Route coding tasks to Freebuff
-    if (this.useFreebuff && this.isCodingTask(userMessage)) {
-      console.log('[ConversationLoop] Routing to Freebuff for coding task');
-      try {
-        const result = await freebuffAgent.processCodeRequest(userMessage, context.workspaceId);
-        if (result.success) {
-          if (result.changes && result.changes.length > 0) {
-            return this.formatFreebuffResponse(result);
-          }
-          return `[Freebuff Coding Agent]\n\nI've analyzed your request:\n\n"${userMessage}"\n\n${result.logs?.join('\n') || 'Freebuff processed this request successfully.'}\n\nNote: Connect to a running Freebuff instance for actual code execution.`;
+
+    // Route to Freebuff for coding tasks
+    if (this.useFreebuff && isCodingTask(userMessage)) {
+      if (onStream) {
+        const result = await this.processWithFreebuff(messages, context);
+        for (const chunk of result.split(' ')) {
+          onStream({ type: 'text', content: chunk + ' ' });
         }
-      } catch (error) {
-        console.log('[ConversationLoop] Freebuff failed, falling back to local');
+        onStream({ type: 'done', content: '' });
+        return result;
       }
+      return this.processWithFreebuff(messages, context);
     }
 
-    // Priority 2: Use Hermes Agent for complex reasoning if available
+    // Use Hermes for complex reasoning if available
     if (this.useHermes) {
-      console.log('[ConversationLoop] Using Hermes Agent as brain');
-      return this.processWithHermes(currentMessages, context, onStream);
+      return this.processWithHermes(messages, context, onStream);
     }
 
-    // Priority 3: Fallback to local providers
-    console.log('[ConversationLoop] Using local brain');
-    return this.processLocally(currentMessages, context, provider, onStream);
+    // Fallback to local processing
+    return this.processLocally(messages, context, provider, onStream);
   }
 
-  /**
-   * Process using Hermes Agent
-   */
+  private async processWithFreebuff(messages: Message[], context: AgentContext): Promise<string> {
+    const result = await freebuffAgent.process(messages, context);
+    return this.formatFreebuffResponse(result);
+  }
+
   private async processWithHermes(
     messages: Message[],
     context: AgentContext,
-    onStream?: (chunk: StreamingChunk) => void
+    onStream?: (chunk: { type: string; content?: string }) => void
   ): Promise<string> {
-    const recentMessages = contextEngine.getRecentMessages(messages, 50);
-    
-    if (onStream) {
-      // Streaming mode
-      let fullResponse = '';
-      try {
-        for await (const chunk of hermesBridge.streamComplete({
-          model: 'hermes-3',
-          messages: recentMessages.map(m => ({ role: m.role, content: m.content })),
-          temperature: context.model.temperature ?? 0.7,
-          max_tokens: context.model.max_tokens ?? 4096,
-        })) {
-          fullResponse += chunk;
-          onStream({ type: 'text', content: chunk });
-        }
-        onStream({ type: 'done' });
-        return fullResponse;
-      } catch (error) {
-        console.error('[ConversationLoop] Hermes streaming failed:', error);
-        // Fall back to local processing
-        return this.processLocally(messages, context, null, onStream);
-      }
-    } else {
-      // Non-streaming mode
-      try {
-        return await hermesBridge.complete({
-          model: 'hermes-3',
-          messages: recentMessages.map(m => ({ role: m.role, content: m.content })),
-          temperature: context.model.temperature ?? 0.7,
-          max_tokens: context.model.max_tokens ?? 4096,
-        });
-      } catch (error) {
-        console.error('[ConversationLoop] Hermes request failed:', error);
-        // Create a default provider for fallback
-        const provider = context.model.provider === 'openai' 
-          ? await import('./providers/openai-provider').then(m => m.openaiProvider)
-          : await import('./providers/anthropic-provider').then(m => m.anthropicProvider);
-        return this.processLocally(messages, context, provider, undefined);
-      }
-    }
-  }
+    const currentMessages = [...messages];
+    let turn = 0;
 
-  /**
-   * Process using local AI providers (Anthropic/OpenAI)
-   */
-  private async processLocally(
-    messages: Message[],
-    context: AgentContext,
-    provider: AIProvider | null,
-    onStream?: (chunk: StreamingChunk) => void
-  ): Promise<string> {
-    if (!provider) {
-      // Create a default provider
-      provider = context.model.provider === 'openai' 
-        ? await import('./providers/openai-provider').then(m => m.openaiProvider)
-        : await import('./providers/anthropic-provider').then(m => m.anthropicProvider);
-    }
+    while (turn < this.maxTurns) {
+      turn++;
+      const assistantMessage = await hermesBridge.invoke(
+        currentMessages,
+        context.workspace_id || "",
+        this.timeoutMs
+      );
 
-    let currentMessages = [...messages];
-    let turnsCount = 0;
-    let finalResponse = '';
+      currentMessages.push(assistantMessage);
 
-    // Build initial context
-    const systemPrompt = this.buildSystemPrompt(context);
-    let contextMessages = contextEngine.buildContext(currentMessages, systemPrompt);
-
-    // Main conversation loop
-    while (turnsCount < this.maxTurns) {
-      turnsCount++;
-      console.log(`[ConversationLoop] Turn ${turnsCount}/${this.maxTurns}`);
-
-      // Get AI completion
-      let assistantMessage: string;
-      
-      if (onStream) {
-        let fullResponse = '';
-        await provider.createStreamingCompletion(contextMessages, context.model, (chunk) => {
-          if (chunk.type === 'text') {
-            fullResponse += chunk.content;
-            onStream(chunk);
-          } else if (chunk.type === 'done') {
-            onStream(chunk);
-          }
-        });
-        assistantMessage = fullResponse;
-      } else {
-        assistantMessage = await provider.createCompletion(contextMessages, context.model);
-      }
-
-      // Check for tool calls in the response
+      // Check for tool calls
       const toolCalls = this.extractToolCalls(assistantMessage);
-
       if (toolCalls.length === 0) {
-        // No tools called, this is the final response
-        finalResponse = assistantMessage;
-        break;
+        if (onStream) {
+          onStream({ type: 'text', content: assistantMessage.content || '' });
+          onStream({ type: 'done', content: '' });
+        }
+        return assistantMessage.content || '';
       }
-
-      // Add assistant message with tool calls to context
-      const assistantMsg: Message = {
-        id: `assistant-${Date.now()}`,
-        role: 'assistant',
-        content: assistantMessage,
-        timestamp: Date.now(),
-        tool_calls: toolCalls,
-      };
-      contextMessages.push(assistantMsg);
 
       // Execute tools
       const toolResults = await toolExecutor.executeToolCalls(toolCalls, context);
-
-      // Add tool results to context
       for (const result of toolResults) {
-        const toolMsg: Message = {
-          id: `tool-${Date.now()}-${Math.random()}`,
-          role: 'tool',
-          content: result.result || result.error || 'Tool execution failed',
+        currentMessages.push({
+          id: `tool-${Date.now()}`,
           timestamp: Date.now(),
-          tool_result: result,
-        };
-        contextMessages.push(toolMsg);
-
-        if (onStream) {
-          onStream({
-            type: 'tool_result',
-            content: result.result || result.error || '',
-          });
-        }
+          
+          role: 'tool',
+          content: JSON.stringify(result),
+        });
       }
 
-      // Check if we should continue looping
+      // Check if all tools failed
       const allFailed = toolResults.every(r => !r.success);
       if (allFailed) {
-        finalResponse = "I encountered errors while trying to use tools.";
-        break;
+        const finalResponse = 'All tool executions failed. The task could not be completed.';
+        if (onStream) {
+          onStream({ type: 'text', content: finalResponse });
+          onStream({ type: 'done', content: '' });
+        }
+        return finalResponse;
       }
     }
 
-    return finalResponse || "I'm sorry, I couldn't complete the request.";
+    return 'Maximum turns reached without resolution.';
   }
 
-  /**
-   * Format Freebuff response nicely
-   */
-  private formatFreebuffResponse(result: { changes?: Array<{file_path: string; action: string; diff?: string}>; logs?: string[] }): string {
-    const parts: string[] = ['[Freebuff Coding Agent]\n'];
-    
-    if (result.changes && result.changes.length > 0) {
-      parts.push('\n📝 **Proposed Changes:**\n');
-      result.changes.forEach((change, i) => {
-        parts.push(`${i + 1}. **${change.action}** \\`${change.file_path}\\`\n`);
-        if (change.diff) {
-          parts.push(`   \n   \\`${change.diff.substring(0, 200)}...\n   \n`);
+  private async processLocally(
+    messages: Message[],
+    context: AgentContext,
+    provider: any,
+    onStream?: (chunk: { type: string; content?: string }) => void
+  ): Promise<string> {
+    if (!provider) {
+      return 'No AI provider available. Please configure an AI provider.';
+    }
+
+    const systemPrompt = this.buildSystemPrompt(context);
+    const response = await provider.complete(
+      [...messages],
+      systemPrompt,
+      (chunk: string) => {
+        if (onStream) {
+          onStream({ type: 'text', content: chunk });
         }
-      });
+      }
+    );
+
+    if (onStream) {
+      onStream({ type: 'done', content: '' });
     }
-    
-    if (result.logs && result.logs.length > 0) {
-      parts.push('\n📋 **Logs:**\n');
-      result.logs.forEach(log => parts.push(`• ${log}\n`));
-    }
-    
-    parts.push('\n_Connect to a running Freebuff instance for actual code execution._');
-    return parts.join('');
+
+    return response;
   }
 
-  /**
-   * Build system prompt with agent configuration
-   */
+  private formatFreebuffResponse(result: any): string {
+    if (!result) return 'No response from Freebuff agent.';
+
+    let response = '## Freebuff Analysis\n\n';
+
+    if (result.proposed_files) {
+      response += '### Proposed Changes:\n';
+      for (const file of result.proposed_files) {
+        response += `- \`${file.path}\`: ${file.description}\n`;
+      }
+      response += '\n';
+    }
+
+    if (result.logs) {
+      response += '### Execution Logs:\n';
+      for (const log of result.logs) {
+        response += `- ${log}\n`;
+      }
+    }
+
+    return response;
+  }
+
   private buildSystemPrompt(context: AgentContext): string {
     const parts: string[] = [];
 
@@ -259,77 +169,40 @@ export class ConversationLoop {
       parts.push(context.system_prompt);
     }
 
-    parts.push(`You are ${context.model.provider === 'anthropic' ? 'Claude' : 'an AI assistant'} powered by the SAHJONY Agent Engine.`);
-    parts.push(`You have access to various tools to help users accomplish tasks.`);
+    const modelProvider = context.model?.provider || 'anthropic';
+    const modelName = modelProvider === 'anthropic' ? 'Claude' : 'an AI assistant';
 
-    // Add enabled tools info
+    parts.push(`You are ${modelName} powered by the SAHJONY Agent Engine.`);
+    parts.push('You have access to various tools to help accomplish tasks.');
+
     const enabledTools = toolExecutor.getEnabledTools();
     if (enabledTools.length > 0) {
-      const toolNames = enabledTools.map(t => t.name).join(', ');
-      parts.push(`Available tools: ${toolNames}`);
-    }
-
-    // Add skill context if any
-    const activeSkills = context.skills.filter(s => s.enabled);
-    if (activeSkills.length > 0) {
-      parts.push('\nActive skills:');
-      activeSkills.forEach(skill => {
-        parts.push(`- ${skill.name}: ${skill.description}`);
-      });
+      parts.push(`Available tools: ${enabledTools.join(', ')}.`);
     }
 
     return parts.join('\n');
   }
 
-  /**
-   * Extract tool calls from assistant message
-   */
-  private extractToolCalls(message: string): ToolCall[] {
-    const toolCalls: ToolCall[] = [];
+  private extractToolCalls(message: Message): any[] {
+    if (!message.tool_calls) return [];
 
-    // Try to parse JSON tool calls
-    try {
-      const jsonMatch = message.match(/```(?:json)?\n([\r\n]*tool_calls[\r\n]*:[\r\n]*\n.*?)\n```/i);
-      if (jsonMatch) {
-        const parsed = JSON.parse(jsonMatch[1]);
-        const calls = Array.isArray(parsed) ? parsed : parsed.tool_calls || [];
-        for (const call of calls) {
-          toolCalls.push({
-            id: call.id || `tc-${Date.now()}-${Math.random()}`,
-            name: call.name,
-            arguments: call.arguments || {},
-          });
-        }
-      }
-    } catch {
-      // Not JSON, try other patterns
-    }
-
-    // Look for <tool_call> XML-like tags
-    const toolCallRegex = /<tool_call>\n*<name>(.*?)<\/name>\n*<args>(.*?)<\/args>\n*<\/tool_call>/gi;
-    let match;
-    while ((match = toolCallRegex.exec(message)) !== null) {
+    // Handle different formats of tool calls
+    if (typeof message.tool_calls === 'string') {
       try {
-        const args = JSON.parse(match[2]);
-        toolCalls.push({
-          id: `tc-${Date.now()}-${Math.random()}`,
-          name: match[1],
-          arguments: args,
-        });
+        const parsed = JSON.parse(message.tool_calls);
+        return parsed.tool_calls || [];
       } catch {
-        // Skip malformed tool calls
+        return [];
       }
     }
 
-    return toolCalls;
-  }
-
-  /**
-   * Reset conversation state
-   */
-  reset() {
-    // Could reset any cached state here
+    return message.tool_calls;
   }
 }
 
+// Export singleton instance for convenience
 export const conversationLoop = new ConversationLoop();
+
+export function reset() {
+  // Reset any state if needed
+}

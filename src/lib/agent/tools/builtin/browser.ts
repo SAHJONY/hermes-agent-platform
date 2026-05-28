@@ -43,7 +43,7 @@ async function getPuppeteer() {
 export const browserTool: Tool = {
   name: 'browser',
   description: 'Control a web browser to navigate pages, take screenshots, click elements, and extract information. Use this to interact with web pages, scrape content, or automate web tasks.',
-  category: 'browser',
+  
   parameters: {
     type: 'object',
     properties: {
@@ -75,7 +75,7 @@ export const browserTool: Tool = {
     },
     required: ['action'],
   },
-  handler: async (args: Record<string, unknown>, _context: AgentContext): Promise<{tool_call_id: string; result: string; success: boolean; error?: string}> => {
+  execute: async (args: Record<string, unknown>, _context: AgentContext): Promise<{tool_call_id: string; result: string; success: boolean; error?: string}> => {
     const { action, url, selector, text, extract, wait_for = 1000 } = args as {
       action: string;
       url?: string;

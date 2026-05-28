@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useAuth, useTheme } from '@/components/providers'
 import { Bot, Menu, LogOut, Settings, MessageSquare, Zap, Sun, Moon } from 'lucide-react'
 import { useState } from 'react'
+import { cn } from '@/lib/utils'
 
 const navLinks = [
   { href: '/agents', label: 'Agents', icon: Bot },
@@ -20,8 +21,8 @@ export function TopNav() {
   const [userMenuOpen, setUserMenuOpen] = useState(false)
 
   return (
+    <header className="border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-50">
       <div className="container-custom flex h-16 items-center justify-between">
-        {/* Logo */}
         <Link href="/" className="flex items-center gap-3 group">
           <div className="relative">
             <div className="p-2 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-all duration-200">
@@ -35,7 +36,6 @@ export function TopNav() {
           </div>
         </Link>
 
-        {/* Desktop Nav Links */}
         <nav className="hidden md:flex items-center gap-1">
           {navLinks.map((link) => {
             const isActive = pathname.startsWith(link.href)
@@ -45,9 +45,7 @@ export function TopNav() {
                 href={link.href}
                 className={cn(
                   'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-150',
-                  isActive
-                    ? 'bg-primary/10 text-primary'
-                    : 'text-zinc-400 hover:text-white hover:bg-surface'
+                  isActive ? 'bg-primary/10 text-primary' : 'text-zinc-400 hover:text-white hover:bg-surface'
                 )}
               >
                 <link.icon className="h-4 w-4" />
@@ -57,9 +55,7 @@ export function TopNav() {
           })}
         </nav>
 
-        {/* Right side */}
         <div className="flex items-center gap-2">
-          {/* Theme Toggle Button */}
           <button
             onClick={toggleTheme}
             className="relative p-2.5 rounded-xl hover:bg-surface transition-all duration-200 group"
@@ -76,7 +72,6 @@ export function TopNav() {
 
           {user ? (
             <>
-              {/* User Avatar Button */}
               <div className="relative">
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
@@ -90,10 +85,7 @@ export function TopNav() {
 
                 {userMenuOpen && (
                   <>
-                    <div
-                      className="fixed inset-0 z-40"
-                      onClick={() => setUserMenuOpen(false)}
-                    />
+                    <div className="fixed inset-0 z-40" onClick={() => setUserMenuOpen(false)} />
                     <div className="absolute right-0 mt-2 w-56 py-2 bg-surface-elevated border border-border rounded-xl shadow-xl z-50 animate-scale-in">
                       <div className="px-4 py-3 border-b border-border">
                         <p className="text-sm font-medium text-white truncate">{user.email}</p>
@@ -108,10 +100,7 @@ export function TopNav() {
                           Settings
                         </Link>
                         <button
-                          onClick={() => {
-                            setUserMenuOpen(false)
-                            signOut()
-                          }}
+                          onClick={() => { setUserMenuOpen(false); signOut() }}
                           className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-zinc-300 hover:bg-surface hover:text-error transition-colors"
                         >
                           <LogOut className="h-4 w-4" />
@@ -125,22 +114,11 @@ export function TopNav() {
             </>
           ) : (
             <>
-              <Link
-                href="/login"
-                className="px-4 py-2 text-sm text-zinc-300 hover:text-white transition-colors"
-              >
-                Sign in
-              </Link>
-              <Link
-                href="/login"
-                className="px-5 py-2.5 text-sm bg-primary text-white rounded-lg font-medium hover:bg-primary-hover hover:shadow-primary transition-all"
-              >
-                Get Started
-              </Link>
+              <Link href="/login" className="px-4 py-2 text-sm text-zinc-300 hover:text-white transition-colors">Sign in</Link>
+              <Link href="/login" className="px-5 py-2.5 text-sm bg-primary text-white rounded-lg font-medium hover:bg-primary-hover hover:shadow-primary transition-all">Get Started</Link>
             </>
           )}
 
-          {/* Mobile menu button */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className="md:hidden p-2 text-zinc-400 hover:text-white hover:bg-surface rounded-lg transition-colors"
@@ -150,7 +128,6 @@ export function TopNav() {
         </div>
       </div>
 
-      {/* Mobile menu */}
       {menuOpen && (
         <div className="md:hidden border-t border-border bg-surface-elevated animate-slide-down">
           <nav className="container-custom py-3 space-y-1">
@@ -163,9 +140,7 @@ export function TopNav() {
                   onClick={() => setMenuOpen(false)}
                   className={cn(
                     'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all',
-                    isActive
-                      ? 'bg-primary/10 text-primary'
-                      : 'text-zinc-400 hover:text-white hover:bg-surface'
+                    isActive ? 'bg-primary/10 text-primary' : 'text-zinc-400 hover:text-white hover:bg-surface'
                   )}
                 >
                   <link.icon className="h-5 w-5" />
