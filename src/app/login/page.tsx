@@ -53,7 +53,7 @@ export default function LoginPage() {
               <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center font-bold text-black text-sm">
                 H
               </div>
-              <span className="font-semibold">Hermes</span>
+              <span className="font-semibold">SAHJONY</span>
             </Link>
             <h1 className="text-3xl font-semibold mb-2">Sign in</h1>
             <p className="text-gray-400">Continue to your dashboard</p>
@@ -156,7 +156,7 @@ export default function LoginPage() {
           <div className="w-20 h-20 bg-neutral-900 rounded-2xl flex items-center justify-center text-3xl font-bold mx-auto mb-8">
             H
           </div>
-          <h2 className="text-2xl font-semibold mb-4">Welcome to Hermes</h2>
+          <h2 className="text-2xl font-semibold mb-4">Welcome to SAHJONY</h2>
           <p className="text-gray-400 leading-relaxed">
             Configure your own AI agents, collaborate with your team, and build powerful workflows.
           </p>

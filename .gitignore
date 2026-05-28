@@ -42,3 +42,4 @@ prisma/*.db-journal
 # UI
 *.css.map
 *.scss.map
+.vercel

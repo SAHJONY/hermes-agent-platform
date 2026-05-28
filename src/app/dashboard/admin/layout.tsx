@@ -92,7 +92,7 @@ export default function AdminLayout({
               H
             </div>
             <div>
-              <span className="font-semibold text-sm">Hermes</span>
+              <span className="font-semibold text-sm">SAHJONY</span>
               <span className="text-xs text-gray-500 block">Admin Panel</span>
             </div>
           </Link>

@@ -1,0 +1,72 @@
+          <section className="py-20 px-4">
+            <div className="max-w-6xl mx-auto">
+              <div className="text-center mb-16">
+                <h2 className="text-4xl font-bold mb-4">Simple, Transparent Pricing</h2>
+                <p className="text-xl text-gray-400">Start free, upgrade when you need more power</p>
+              </div>
+
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {/* Starter */}
+                <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700 hover:border-blue-500 transition-colors">
+                  <h3 className="text-xl font-semibold mb-2">Starter</h3>
+                  <div className="text-4xl font-bold mb-4">$49<span className="text-lg text-gray-400">/mo</span></div>
+                  <p className="text-gray-400 text-sm mb-6">Perfect for getting started</p>
+                  <ul className="space-y-3 mb-8 text-sm">
+                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-blue-400" />5 workspaces</li>
+                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-blue-400" />1,000 messages/mo</li>
+                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-blue-400" />Basic agents</li>
+                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-blue-400" />Community support</li>
+                  </ul>
+                  <button className="w-full py-3 px-4 rounded-lg bg-gray-700 hover:bg-gray-600 transition-colors">Get Started</button>
+                </div>
+
+                {/* Pro - Most Popular */}
+                <div className="bg-gradient-to-b from-blue-900/30 to-gray-800/50 rounded-2xl p-6 border-2 border-blue-500 relative">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-500 text-xs font-bold px-3 py-1 rounded-full">Most Popular</div>
+                  <h3 className="text-xl font-semibold mb-2">Pro</h3>
+                  <div className="text-4xl font-bold mb-4">$99<span className="text-lg text-gray-400">/mo</span></div>
+                  <p className="text-gray-400 text-sm mb-6">For teams and professionals</p>
+                  <ul className="space-y-3 mb-8 text-sm">
+                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-blue-400" />25 workspaces</li>
+                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-blue-400" />50,000 messages/mo</li>
+                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-blue-400" />Advanced agents</li>
+                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-blue-400" />API access</li>
+                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-blue-400" />Priority support</li>
+                  </ul>
+                  <button className="w-full py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 transition-colors">Start Free Trial</button>
+                </div>
+
+                {/* Business */}
+                <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700 hover:border-purple-500 transition-colors">
+                  <h3 className="text-xl font-semibold mb-2">Business</h3>
+                  <div className="text-4xl font-bold mb-4">$149<span className="text-lg text-gray-400">/mo</span></div>
+                  <p className="text-gray-400 text-sm mb-6">For growing businesses</p>
+                  <ul className="space-y-3 mb-8 text-sm">
+                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-purple-400" />50 workspaces</li>
+                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-purple-400" />200,000 messages/mo</li>
+                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-purple-400" />Team collaboration</li>
+                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-purple-400" />Custom agents</li>
+                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-purple-400" />SSO & SAML</li>
+                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-purple-400" />Dedicated support</li>
+                  </ul>
+                  <button className="w-full py-3 px-4 rounded-lg bg-gray-700 hover:bg-gray-600 transition-colors">Contact Sales</button>
+                </div>
+
+                {/* Enterprise */}
+                <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700 hover:border-amber-500 transition-colors">
+                  <h3 className="text-xl font-semibold mb-2">Enterprise</h3>
+                  <div className="text-4xl font-bold mb-4">$199<span className="text-lg text-gray-400">/mo</span></div>
+                  <p className="text-gray-400 text-sm mb-6">For large organizations</p>
+                  <ul className="space-y-3 mb-8 text-sm">
+                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-amber-400" />Unlimited workspaces</li>
+                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-amber-400" />Unlimited messages</li>
+                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-amber-400" />White-label options</li>
+                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-amber-400" />Custom integrations</li>
+                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-amber-400" />SLA guarantee</li>
+                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-amber-400" />Dedicated account manager</li>
+                  </ul>
+                  <button className="w-full py-3 px-4 rounded-lg bg-amber-600 hover:bg-amber-700 transition-colors">Contact Sales</button>
+                </div>
+              </div>
+            </div>
+          </section>

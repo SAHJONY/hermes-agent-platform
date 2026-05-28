@@ -55,7 +55,7 @@ export default function RegisterPage() {
               <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center font-bold text-black text-sm">
                 H
               </div>
-              <span className="font-semibold">Hermes</span>
+              <span className="font-semibold">SAHJONY</span>
             </Link>
             <h1 className="text-3xl font-semibold mb-2">Create account</h1>
             <p className="text-gray-400">Start building with AI agents today</p>

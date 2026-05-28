@@ -32,9 +32,9 @@ export default function AdminSystemPage() {
   const [activeTab, setActiveTab] = useState('General')
   const [settings, setSettings] = useState({
     // General
-    platformName: 'Hermes Agent Platform',
-    platformUrl: 'https://hermes-platform.com',
-    supportEmail: 'support@hermes-platform.com',
+    platformName: 'SAHJONY Agent Platform',
+    platformUrl: 'https://sahjony.com',
+    supportEmail: 'support@sahjony.com',
     maintenanceMode: false,
     allowNewRegistrations: true,
     // Security
@@ -44,8 +44,8 @@ export default function AdminSystemPage() {
     maxLoginAttempts: 5,
     // Email
     emailProvider: 'resend',
-    emailFromAddress: 'noreply@hermes-platform.com',
-    emailFromName: 'Hermes Platform',
+    emailFromAddress: 'noreply@sahjony.com',
+    emailFromName: 'SAHJONY Platform',
     // API
     defaultRateLimit: 100,
     allowApiKeyCreation: true,
@@ -54,7 +54,7 @@ export default function AdminSystemPage() {
     dbProvider: 'sqlite',
     dbHost: 'localhost',
     dbPort: 3306,
-    dbName: 'hermes_db',
+    dbName: 'sahjony_db',
     // Monitoring
     enableAnalytics: true,
     logLevel: 'info',
@@ -341,9 +341,9 @@ export default function AdminSystemPage() {
                 <div className="bg-neutral-900 rounded-lg p-4 font-mono text-xs">
                   <div className="space-y-2">
                     <p className="text-gray-500"># REST API Base URL</p>
-                    <p className="text-green-400">https://api.hermes-platform.com/v1</p>
+                    <p className="text-green-400">https://api.sahjony.com/v1</p>
                     <p className="text-gray-500 mt-4"># WebSocket Endpoint</p>
-                    <p className="text-green-400">wss://ws.hermes-platform.com</p>
+                    <p className="text-green-400">wss://ws.sahjony.com</p>
                   </div>
                 </div>
               </div>

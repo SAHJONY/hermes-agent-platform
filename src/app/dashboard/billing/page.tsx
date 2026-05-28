@@ -5,34 +5,34 @@ import { CreditCard, Check, Zap, Crown, Building } from 'lucide-react'
 
 const plans = [
   {
-    name: 'Free',
-    price: '$0',
-    period: 'forever',
-    description: 'Perfect for getting started',
-    features: ['3 workspaces', '100 messages/month', 'Basic agents', 'Community support'],
-    current: true,
-  },
-  {
     name: 'Starter',
-    price: '$29',
+    price: '$49',
     period: '/month',
-    description: 'For individual developers',
-    features: ['10 workspaces', '10,000 messages/month', 'Advanced agents', 'API access', 'Priority support'],
-    popular: true,
+    description: 'Perfect for getting started',
+    features: ['5 workspaces', '1,000 messages/month', 'Basic agents', 'Community support'],
+    popular: false,
   },
   {
     name: 'Pro',
     price: '$99',
     period: '/month',
-    description: 'For teams and businesses',
-    features: ['Unlimited workspaces', '100,000 messages/month', 'Team collaboration', 'Custom agents', 'SSO & advanced security', 'Dedicated support'],
+    description: 'For teams and professionals',
+    features: ['25 workspaces', '50,000 messages/month', 'Advanced agents', 'API access', 'Priority support', 'Analytics'],
+    popular: true,
+  },
+  {
+    name: 'Business',
+    price: '$149',
+    period: '/month',
+    description: 'For growing businesses',
+    features: ['50 workspaces', '200,000 messages/month', 'Team collaboration', 'Custom agents', 'SSO & SAML', 'Dedicated support'],
   },
   {
     name: 'Enterprise',
-    price: 'Custom',
-    period: '',
+    price: '$199',
+    period: '/month',
     description: 'For large organizations',
-    features: ['Unlimited everything', 'Custom integrations', 'SLA guarantee', 'Dedicated account manager', 'On-premise deployment'],
+    features: ['Unlimited workspaces', 'Unlimited messages', 'Custom integrations', 'SLA guarantee', 'Dedicated account manager', '24/7 support'],
   },
 ]
 
@@ -49,13 +49,13 @@ export default function BillingPage() {
       <div className="tesla-card mb-8">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-lg font-semibold">Current Usage</h2>
-          <span className="tesla-badge">Starter Plan</span>
+          <span className="tesla-badge">Pro Plan</span>
         </div>
         <div className="flex items-center gap-4 mb-6">
           <div className="flex-1 h-2 bg-neutral-800 rounded-full overflow-hidden">
             <div className="h-full w-[45%] bg-white rounded-full"></div>
           </div>
-          <span className="text-sm text-gray-400">4,523 / 10,000 messages</span>
+          <span className="text-sm text-gray-400">4,523 / 50,000 messages</span>
         </div>
         <div className="grid grid-cols-3 gap-6 text-center">
           <div>
@@ -63,7 +63,7 @@ export default function BillingPage() {
             <p className="text-xs text-gray-500 mt-1">This Month</p>
           </div>
           <div>
-            <p className="text-2xl font-semibold">$29.00</p>
+            <p className="text-2xl font-semibold">$99.00</p>
             <p className="text-xs text-gray-500 mt-1">Next Invoice</p>
           </div>
           <div>
@@ -101,11 +101,6 @@ export default function BillingPage() {
                   Popular
                 </div>
               )}
-              {plan.current && (
-                <div className="absolute -top-3 left-4 px-2 py-0.5 bg-green-600 rounded-full text-xs font-medium">
-                  Current
-                </div>
-              )}
               <div className="pt-2">
                 <h3 className="text-base font-semibold text-gray-400 mb-2">{plan.name}</h3>
                 <div className="flex items-baseline gap-1 mb-2">
@@ -121,8 +116,8 @@ export default function BillingPage() {
                     </li>
                   ))}
                 </ul>
-                {plan.current ? (
-                  <button className="w-full py-2.5 bg-neutral-800 rounded-lg text-sm font-medium cursor-default">
+                {plan.popular ? (
+                  <button className="w-full py-2.5 bg-white text-black hover:bg-gray-100 rounded-lg text-sm font-medium transition-colors">
                     Current Plan
                   </button>
                 ) : plan.name === 'Enterprise' ? (
@@ -131,7 +126,7 @@ export default function BillingPage() {
                   </button>
                 ) : (
                   <button className="w-full py-2.5 bg-white text-black hover:bg-gray-100 rounded-lg text-sm font-medium transition-colors">
-                    {plan.popular ? 'Upgrade' : 'Select'}
+                    Upgrade
                   </button>
                 )}
               </div>
@@ -145,14 +140,14 @@ export default function BillingPage() {
         <h2 className="text-lg font-semibold mb-6">Billing History</h2>
         <div className="space-y-3">
           {[
-            { date: 'Mar 15, 2024', amount: '$29.00', status: 'Paid' },
-            { date: 'Feb 15, 2024', amount: '$29.00', status: 'Paid' },
-            { date: 'Jan 15, 2024', amount: '$29.00', status: 'Paid' },
+            { date: 'Mar 15, 2024', amount: '$99.00', status: 'Paid' },
+            { date: 'Feb 15, 2024', amount: '$99.00', status: 'Paid' },
+            { date: 'Jan 15, 2024', amount: '$49.00', status: 'Paid' },
           ].map((item, i) => (
             <div key={i} className="flex items-center justify-between p-4 bg-neutral-900 rounded-lg">
               <div>
                 <p className="font-medium text-sm">{item.date}</p>
-                <p className="text-xs text-gray-500">Starter Plan</p>
+                <p className="text-xs text-gray-500">Pro Plan</p>
               </div>
               <div className="flex items-center gap-4">
                 <span className="font-medium">{item.amount}</span>
